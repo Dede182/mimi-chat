@@ -3,7 +3,7 @@ import { routeFC ,routesCollection} from './route'
 import Guard from '../auth/middleware/Guard'
 import Auth from '../auth/middleware/Auth'
 import GuestLayout from '../components/guest/GuestLayout'
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 
 const Chat = lazy(()=>import('../components/authenticated/Chat/Chat'))
 const Login = lazy(()=>import('../components/guest/Login'))
@@ -11,6 +11,7 @@ const Register = lazy(()=>import('../components/guest/Register'))
 
 const RoutesComponent = () => {
   return (
+    <Suspense fallback={<div>Loading...</div>}>
     <Routes>
     { routeFC(routesCollection.chat.path, <Guard><Chat/></Guard>)}
 
@@ -20,8 +21,10 @@ const RoutesComponent = () => {
 
       { routeFC(routesCollection.register.path, <Auth><Register/></Auth>)}
       </Route>
-    
+     
+
     </Routes>
+    </Suspense>
   )
 }
 
