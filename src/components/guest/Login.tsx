@@ -62,7 +62,7 @@ const Login = () => {
 
        <InputField errors={errors.email !} register={register} register_name="email"type="text"  label="email"  placeholder="Enter your email" />
 
-       <InputField errors={errors.password !} register={register} register_name="password"type="text"  label="password"  />
+       <InputField errors={errors.password !} register={register} register_name="password" type="password"  label="password"  />
 
 
       <div className="flex w-full justify-center items-center mt-5 capitalize">
