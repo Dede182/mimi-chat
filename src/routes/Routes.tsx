@@ -25,7 +25,7 @@ const RoutesComponent = () => {
       <Route path="*" element={<h1>
         route not found
         Pls go to Login page
-        <a className='text-blue-500 underline mx-3' href="/login">Login</a>
+        <a className='text-blue-500 underline mx-3' href="/">Login</a>
       </h1>} />
     </Routes>
     </Suspense>
