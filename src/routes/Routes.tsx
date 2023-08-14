@@ -22,7 +22,11 @@ const RoutesComponent = () => {
       { routeFC(routesCollection.register.path, <Auth><Register/></Auth>)}
       </Route>
      
-
+      <Route path="*" element={<h1>
+        route not found
+        Pls go to Login page
+        <a className='text-blue-500 underline mx-3' href="/login">Login</a>
+      </h1>} />
     </Routes>
     </Suspense>
   )
