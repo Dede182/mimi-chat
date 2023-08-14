@@ -15,6 +15,7 @@ const ThemeSwitcer = () => {
     } else if(theme === 'theme-dark') {
       return moon;
     }
+    return sun;
   };
 
   const handleThemeChange = (t : string) => {
