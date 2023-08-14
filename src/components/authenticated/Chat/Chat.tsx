@@ -1,10 +1,19 @@
+import { t } from "i18next"
 import Cookies from "js-cookie"
+
+const logout = () => {
+  Cookies.remove("token")
+  window.location.href = "/login"
+}
 const Chat = () => {
 
     //remove cookie
- Cookies.remove('token')
+  
   return (
-    <div>Chat</div>
+    <div>
+      <p>{t('welcome')}</p>
+      <button onClick={logout}>Logout</button>
+    </div>
   )
 }
 

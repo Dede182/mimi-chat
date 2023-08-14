@@ -6,5 +6,16 @@
   "name": "နမည်",
   "email": "အီးမေး",
   "password": "လျှို၀ှက်စကား၀ှက်",
-  "password confirmation": "လျှို၀ှက်စကား၀ှက် အတည်ပြုပါ"
+  "password confirmation": "လျှို၀ှက်စကား၀ှက် အတည်ပြုပါ",
+  "Invalid credentials": "အထောက်အထားများ မမှန်ကန်ပါ။",
+  "Email is required": "ကျေးဇူးပြု၍ အီးမေးလ်ဖြည့်ပါ။",
+  "Password is required": "စကားဝှက်ဖြည့်ပေးပါ။",
+  "Password must be at least 6 characters": "စကားဝှက်သည် အနည်းဆုံး အက္ခရာ 6 လုံး ရှိရမည်။",
+  "Email is invalid": "အီးမေးလ် မမှန်ပါ။",
+  "Name is required": "ကျေးဇူးပြု၍ သင့်အမည်ကိုဖြည့်ပါ။",
+  "Password confirmation is required": "စကားဝှက်အတည်ပြုရန် လိုအပ်ပါသည်။",
+  "Passwords must match": "စကားဝှက်မှာကိုက်ညီရမည်",
+  "welcome": "ကြိုဆိုပါတယ်။",
+  "Enter your name": "သင့်အမည်ကို ထည့်သွင်းပါ။",
+  "Enter your email": ""
 }

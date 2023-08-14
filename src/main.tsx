@@ -1,4 +1,3 @@
-import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.scss'
@@ -13,7 +12,7 @@ const startApp = async () => {
   // Wait for i18n initialization
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
+    // <React.StrictMode>
       <I18nextProvider i18n={i18n}>
         <BrowserRouter>
           <Provider store={store}>
@@ -23,7 +22,7 @@ const startApp = async () => {
         </BrowserRouter>
       </I18nextProvider>
 
-    </React.StrictMode>
+    // </React.StrictMode>
   );
 };
 

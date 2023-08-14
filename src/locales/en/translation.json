@@ -6,5 +6,16 @@
   "name": "name",
   "email": "email",
   "password": "password",
-  "password confirmation": "password confirmation"
+  "password confirmation": "password confirmation",
+  "Invalid credentials": "Invalid credentials",
+  "Email is required": "Email is required",
+  "Password is required": "Password is required",
+  "Password must be at least 6 characters": "Password must be at least 6 characters",
+  "Email is invalid": "Email is invalid",
+  "Name is required": "Name is required",
+  "Password confirmation is required": "Password confirmation is required",
+  "Passwords must match": "Passwords must match",
+  "welcome": "welcome",
+  "Enter your name": "Enter your name",
+  "Enter your email": "Enter your email"
 }

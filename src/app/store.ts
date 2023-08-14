@@ -1,3 +1,4 @@
+import { authSlice } from './slices/auth/AuthSlices';
 import { settingSlice } from './slices/settingSlices';
 
 import { configureStore } from '@reduxjs/toolkit';
@@ -5,7 +6,8 @@ import thunkMiddleware from 'redux-thunk';
 
 export const store = configureStore({
   reducer: {
-    setting : settingSlice.reducer
+    setting : settingSlice.reducer,
+    auth : authSlice.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
