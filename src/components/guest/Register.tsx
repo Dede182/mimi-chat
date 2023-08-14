@@ -57,12 +57,12 @@ const Register = () => {
     <div className="min-w-[280px]">
       <HeroError error={error}/>
       <form onSubmit={handleSubmit(onSubmit)}>
-       <InputField errors={errors.name !} register={register} register_name="name"type="text"  label="Name"  placeholder="Enter your name" />
+       <InputField errors={errors.name !} register={register} register_name="name"type="text"  label="name"  placeholder="Enter your name" />
 
        
-       <InputField errors={errors.email !} register={register} register_name="email" type="email"  label="Email"  placeholder="Enter your email" />
+       <InputField errors={errors.email !} register={register} register_name="email" type="email"  label="email"  placeholder="Enter your email" />
        
-       <InputField errors={errors.password !} register={register} register_name="password" type="password"  label="Email"/>
+       <InputField errors={errors.password !} register={register} register_name="password" type="password"  label="password"/>
        
        <InputField errors={errors.password_confirmation !} register={register} register_name="password_confirmation" type="password"  label="password confirmation" />
 

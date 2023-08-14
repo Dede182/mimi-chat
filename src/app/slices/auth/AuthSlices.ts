@@ -25,8 +25,12 @@ export const authService = createAsyncThunk('auth/login', async (body: authbody)
            
             return result.data;
         }
-
+        if(result && result.status === 403 && result.data)
+        {
         throw new Error(result.data.message);
+        }
+
+        throw new Error("Something went wrong!! Please try again later");
     } catch (error) {
      
         if(error instanceof Error)
