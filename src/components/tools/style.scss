@@ -1,0 +1,46 @@
+
+.float-setting
+{
+    background-color: var(--color-secondary);
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 30px 10px;
+
+    @media only screen and (max-width: 768px){
+       top:13vh;
+    } 
+}
+.bg-dropdown{
+    background-color: var(--color-soft);
+    border: none;
+
+    &:hover{
+        background-color: var(--color-hover);
+    }
+}
+
+.bg-dropdown-tab
+{
+    background-color: var(--color-soft);
+
+}
+
+
+.float-setting-item{
+    // background-color: var(--color-secondary);
+
+}
+
+.language-flag-img,.theme-flag-img
+{
+    @apply w-6 object-contain 
+}
+
+.language-btn{
+    @apply btn btn-ghost btn-sm rounded-btn 
+}

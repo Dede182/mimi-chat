@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'Montserrat';
+    src: 
+    url('../fonts/Montserrat-Italic.ttf') format('ttf'),
+    url('../fonts/Montserrat-MediumItalic.ttf') format('ttf'),
+    url('../fonts/Montserrat-SemiBoldItalic.ttf') format('ttf'),
+    url('../fonts/Montserrat-ThinItalic.ttf') format('ttf'),
+  }
+  
+  @font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-BlackItalic.ttf') format('ttf'),
+    url('../fonts/Roboto-BoldItalic.ttf') format('ttf'),
+    url('../fonts/Roboto-LightItalic.ttf') format('ttf'),
+    url('../fonts/Roboto-MediumItalic.ttf') format('ttf'),
+    
+  }
+  
+  // family
+  $font-primary: 'Montserrat', sans-serif;
+  $font-secondary: 'Roboto', serif;
+  
+  // sizes
+  $font-base: 0.9rem;
+  $font-x-small: 0.75rem;
+  $font-small: 0.85rem;
+  $font-medium: 1.15rem;
+  $font-large: 1.4rem;
+  $font-x-large: 2rem;
+  $font-huge: 2.5rem;
+  

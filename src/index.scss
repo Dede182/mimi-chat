@@ -1,0 +1,13 @@
+@import './assets/styles/index' ;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './components/ui/styles/btn';
+
+.theme{
+     background-color: var( --color-primary);
+     color: var(--color-font);
+     font-family : $font-primary;
+}

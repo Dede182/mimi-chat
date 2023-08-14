@@ -1,0 +1,51 @@
+.theme-dark{
+    .bg {
+    background-image: url('../../assets/svgs/dark-fluid.svg');
+    }
+}
+.bg{
+    background-image: url('../../assets/svgs/light-fluid.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width:100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding-top:5vh;
+    
+    .nav-head{
+        background-color: var(--color-hover);
+        padding: 20px ;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+    }
+
+    .main-body{
+        background-color: var(--color-hover);
+        padding: 20px  5rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .outlet{
+            width: 130%!important;
+        }
+        .outlet .form-control input{
+            background: var(--color-primary);
+        }
+        @media only screen and (max-width: 768px){
+            padding: 20px  2rem;
+
+            .outlet{
+                width: 100%!important;
+            }
+        } 
+    }
+}

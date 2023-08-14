@@ -1,0 +1,39 @@
+.btn-primary {
+    color: var(--bs-btn-color);
+    background-color: var(--bs-btn-bg);
+    border-color: var(--bs-btn-border-color);
+
+    &:hover {
+      color: var(--bs-btn-hover-color);
+      background-color: var(--bs-btn-hover-bg);
+      border-color: var(--bs-btn-hover-border-color);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 .25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+    }
+
+    &:not(:disabled):not(.disabled):active {
+      color: var(--bs-btn-active-color);
+      background-color: var(--bs-btn-active-bg);
+      border-color: var(--bs-btn-active-border-color);
+      box-shadow: var(--bs-btn-active-shadow);
+    }
+
+    &:not(:disabled):not(.disabled).active,
+    &:not(:disabled):not(.disabled):active:focus {
+      box-shadow: var(--bs-btn-active-shadow);
+    }
+    
+}
+
+.btn-soft{
+    color: var(--bs-btn-soft-color);
+    background-color: var(--bs-btn-soft-bg);
+    border-color: var(--bs-btn-soft-bg);
+    &:hover {
+      color: var(--bs-btn-hover-color);
+      background-color: var(--bs-btn-hover-bg);
+      border-color: var(--bs-btn-hover-border-color);
+    }
+}
