@@ -3,11 +3,13 @@ import { settingSlice } from './slices/settingSlices';
 
 import { configureStore } from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
+import {sidebarSlice} from './slices/sidebarSlice';
 
 export const store = configureStore({
   reducer: {
     setting : settingSlice.reducer,
-    auth : authSlice.reducer
+    auth : authSlice.reducer,
+    sidebar : sidebarSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

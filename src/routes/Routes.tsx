@@ -1,9 +1,10 @@
 import { Route, Routes } from 'react-router-dom'
-import { routeFC ,routesCollection} from './route'
+import { RouteFc ,routesCollection} from './route'
 import Guard from '../auth/middleware/Guard'
 import Auth from '../auth/middleware/Auth'
 import GuestLayout from '../components/guest/GuestLayout'
 import { lazy, Suspense } from 'react';
+import Layout from '@/components/authenticated/base/Layout'
 
 const Chat = lazy(()=>import('../components/authenticated/Chat/Chat'))
 const Login = lazy(()=>import('../components/guest/Login'))
@@ -13,13 +14,19 @@ const RoutesComponent = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
     <Routes>
-    { routeFC(routesCollection.chat.path, <Guard><Chat/></Guard>)}
 
       <Route path="/" element={<GuestLayout/>}>
       
-      { routeFC(routesCollection.login.path, <Auth><Login/></Auth>,true)}
+      { RouteFc(routesCollection.login.path, <Auth><Login/></Auth>,true)}
 
-      { routeFC(routesCollection.register.path, <Auth><Register/></Auth>)}
+      { RouteFc(routesCollection.register.path, <Auth><Register/></Auth>)}
+      </Route>
+
+      <Route element={<Layout />}>
+
+      { RouteFc(routesCollection.chat.path, <Guard><Chat/></Guard>)}
+
+
       </Route>
      
       <Route path="*" element={<h1>

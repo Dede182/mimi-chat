@@ -37,7 +37,7 @@ export const routesCollection : Record<string,Route> = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const routeFC = (path : any ,element : any,index :boolean = false) => {
+export const RouteFc = (path : any ,element : any,index :boolean = false) => {
   if(index)
   {
   return <Route path={path} element={element} index />
