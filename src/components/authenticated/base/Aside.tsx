@@ -9,6 +9,8 @@ const Favourite = lazy(() => import('./Aside/Favourite'));
 const Setting = lazy(() => import('./Aside/Setting'));
 const MainAside = lazy(() => import('./Aside/MainAside'));
 import { toggleSidebar } from "@/app/slices/sidebarSlice";
+
+
 const renderAside = (aside: CurrentAside) => {
   switch (aside) {
     case CurrentAside.DEFAULT:
@@ -24,7 +26,7 @@ const renderAside = (aside: CurrentAside) => {
   }
 }
 const Aside = () => {
-
+  console.log('aside')
   const aside = useAppSelector(selectSidebar).aside;
   
   const currentAside = renderAside(aside);
@@ -32,6 +34,7 @@ const Aside = () => {
   const dispatch = useAppDispatch();
 
   const toggle = () => {
+    console.log('here');
     dispatch(toggleSidebar());
   }
 
@@ -42,7 +45,7 @@ const Aside = () => {
     [dispatch]
   )
 
-  const sidebarToggle = <button className="absolute top-3 right-2 animate__animated animate__fadeIn sidebar-item  w-8 h-8" onClick={()=>toggle()} >
+  const sidebarToggle = <button className="absolute top-3 right-2 animate__animated animate__fadeIn sidebar-item  w-8 h-8 z-20" onClick={()=>toggle()} >
     <span className="sidebar-icon">
     <AiOutlineAppstore />
       </span>
@@ -50,13 +53,13 @@ const Aside = () => {
 
   const showCrossButton = aside !== CurrentAside.DEFAULT;
 
-  const asideClass = 'w-[25vw] aside'
+  const asideClass = 'w-[24rem] aside'
   return (
     <Suspense fallback={<div>Loading...</div>}>
       
-      <aside className={`${asideClass} relative`}>
+      <aside  className={`${asideClass} relative `}>
 
-      {showCrossButton ? <button className="absolute top-3 right-2 w-6 h-6 animate__animated animate__fadeIn" onClick={()=>goDefaultAside()} >
+      {showCrossButton ? <button className="absolute top-3 right-2 w-6 h-6 animate__animated animate__fadeIn z-20" onClick={()=>goDefaultAside()} >
         <ImCross />
       </button> : sidebarToggle}
         {currentAside}

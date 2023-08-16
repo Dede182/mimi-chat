@@ -1,3 +1,4 @@
+import { gos, eos } from './helper';
 import { modifiedAxiosResponse } from './../../../api/auth/AuthRequest';
 import Cookies from 'js-cookie';
 import { RootState } from './../../store';
@@ -20,26 +21,15 @@ export const authService = createAsyncThunk('auth/login', async (body: authbody)
 
     try {
         const response = await postLogin(url, data) as modifiedAxiosResponse ;
-        const result = response
-        if (result && result.status === 200 && result.data) {
-           
-            return result.data;
-        }
-        if(result && result.status === 403 && result.data)
-        {
-        throw new Error(result.data.message);
-        }
-
-        throw new Error("Something went wrong!! Please try again later");
+        
+        return gos(response);
     } catch (error) {
      
-        if(error instanceof Error)
-        {
-            throw new Error(error.message);
-        }
+       eos(error)
     }
 
 })
+
 
 export const authSlice = createSlice({
     name: 'auth',

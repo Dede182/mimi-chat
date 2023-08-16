@@ -1,3 +1,4 @@
+import { userSlice } from './slices/auth/UserSlice';
 import { authSlice } from './slices/auth/AuthSlices';
 import { settingSlice } from './slices/settingSlices';
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     setting : settingSlice.reducer,
     auth : authSlice.reducer,
     sidebar : sidebarSlice.reducer,
+    user : userSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -34,3 +34,28 @@ export const postLogin = async (url: string, body: any) => {
         }
     }
 }
+
+export const getProfile = async (url: string, token: string) => {
+    try {
+        const obj = {
+            method: "get",
+            url: url,
+            token  :token
+        }
+        const response = await ApiRequest(obj) as modifiedAxiosResponse;
+        if(response instanceof AxiosError)
+        {
+            return response.response
+        }
+        console.log("🚀 ~ file: AuthRequest.ts:21 ~ postLogin ~ response:", response)
+        
+        return response;
+
+    }
+    catch (e) {
+        if (e instanceof Error) {
+            //return some thing
+            return e;
+        }
+    }
+}

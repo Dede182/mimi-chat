@@ -1,16 +1,8 @@
-import { useAppSelector } from "./app/hooks";
-import { selectTheme } from "./app/slices/settingSlices";
-import RoutesComponent from "./routes/Routes";
-
 import Echo from 'laravel-echo';
+import { EchoContract } from './Contracts/EchoManagerContract';
 
-import Pusher from 'pusher-js';
-
-const App = () => {
-  const theme = useAppSelector(selectTheme)
-    window.Pusher = Pusher;
-    window.Echo = new Echo({
-      broadcaster: 'pusher',
+const options = {
+    broadcaster: 'pusher',
       key: import.meta.env.VITE_PUSHER_APP_KEY,
       cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
       wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
@@ -19,16 +11,23 @@ const App = () => {
       forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
       enabledTransports: ['ws', 'wss'],
       encrypted: false,
+}
 
 
-  })
-  return (
-    <div className={`${theme} theme w-full max-h-[100vh] transition-all`}>
-      <RoutesComponent />
-    </div>
-  );
-};
+export class BaseEchoManager implements EchoContract
+{
+    public echo!: Echo | null;
+  
+    public setupEcho()
+    { 
+        if(!this.echo)
+        {
+            this.echo = new Echo(options); // Initialize Echo instance here
+        }
+        
+    }
+    getEcho(): Echo | null {
+        return this.echo;
+    }
 
-
-
-export default App
+}

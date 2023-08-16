@@ -1,0 +1,16 @@
+.theme-dark .chat-bg {
+    background-image: url("../../../assets/svgs/darkChatBg.svg");
+    width: 100%;
+}
+
+.chat-bg {
+    background-image: url("../../../assets/svgs/chatBg.svg");
+    width: 100%;
+
+    .chat-banner {
+        background-color: var(--color-secondary);
+        height:6rem;
+        width:100%;
+        @apply flex items-center px-5;
+    }
+}

@@ -2,8 +2,13 @@
     border-right-width: 1px;
     background-color: var(--color-primary);
     border-color: var(--color-border);
-    @apply h-[100vh]  transition-all flex justify-center items-center;
+    @apply h-[100vh]  transition-all flex flex-col  items-center;
 
+    .sidebar-logo {
+        border-bottom-width: 1px;
+        border-color: var(--color-border);
+        @apply h-32 w-full ;
+    }
     ul {
         display: flex;
         flex-direction: column;
@@ -77,4 +82,12 @@
 .sidebar-icon {
     color: var(--color-font);
     font-size: 1rem;
+}
+
+.chat-cata {
+    &[data-active="true"] {
+        background-color: #1c9dea !important;
+        border-color: #1c9dea !important;
+    }
+    @apply badge badge-lg badge-neutral text-white h-8 px-4 capitalize;
 }
