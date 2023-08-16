@@ -3,24 +3,31 @@ import { BaseEchoManager } from './BaseEchoManager';
 import { ApiRequest } from '@/api/ApiRequest';
 
 
-export class PublicEchoManager extends BaseEchoManager{
+export class PresenceEchoManager extends BaseEchoManager{
   private channelName: string;
   private subscribedCallback: (() => void) | null = null;
 
-  constructor(channelName: string) {
-    super();
+  constructor(channelName: string, token: string) {
+    console.log(token);
+    super(token);
     this.channelName = channelName;
     this.setupEcho();
+
   }
 
-  publicSubscribe(subscribedCallback?: () => void) {
+  presenceSubscribe(subscribedCallback?: () => void) {
     this.subscribedCallback = subscribedCallback || null;
         
-    this.echo!.channel(this.channelName)
-      .subscribed(() => {
+    this.echo!.join(this.channelName)
+      .here((user : any) => {
+        console.log('hesre');
         if (this.subscribedCallback) {
           this.subscribedCallback();
         }
+        console.log(user)
+      })
+      .joining((user : any) => {
+        console.log('joining');
       })
       
       

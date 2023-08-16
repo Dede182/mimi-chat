@@ -1,3 +1,5 @@
+
+
 .theme-dark .chat-bg {
     background-image: url("../../../assets/svgs/darkChatBg.svg");
     width: 100%;
@@ -8,9 +10,20 @@
     width: 100%;
 
     .chat-banner {
-        background-color: var(--color-secondary);
+        background-color: var(--color-primary);
         height:6rem;
         width:100%;
         @apply flex items-center px-5;
     }
+
+    .chat-input{
+        background-color: var(--color-primary);
+    }
+
+    .chat-end .chat-bubble{
+        background-color: var(--bs-btn-bg);
+        color : #fff;
+       
+    }
 }
+

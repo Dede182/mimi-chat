@@ -1,10 +1,13 @@
-import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useState } from 'react';
 import { Navigation } from 'swiper/modules';
 import "swiper/css";
+import { CastType, MemorizedChatHeadItem } from './ChatHeadSwiperItem';
 
-const ChatHeadSwiper = ({casts }) => {
+type CastsProps = {
+  casts : Array<CastType>
+}
+const ChatHeadSwiper = ({casts } : CastsProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
   const [my_swiper, set_my_swiper] = useState<any>();
@@ -26,17 +29,9 @@ const ChatHeadSwiper = ({casts }) => {
         set_my_swiper(ev);
       }}
     >
-      {casts?.cast?.map((cast : object, index : string) => (
-        <SwiperSlide key={index}>
-          <div className="avatar online  ">
-            <div className="h-28 rounded-xl shadow-lg relative">
-              <img src={`https://i.pravatar.cc/250?img=${index}`} />
-              <div className='absolute bottom-4  text-white right-2 flex justify-between items-center'>
-                  <p>{cast.name !}</p>
-
-              </div>
-            </div>
-          </div>
+      {casts.map((cast : CastType) => (
+        <SwiperSlide key={cast.id + Math.random()}>
+          <MemorizedChatHeadItem  cast={cast} />
 
         </SwiperSlide>
       ))}

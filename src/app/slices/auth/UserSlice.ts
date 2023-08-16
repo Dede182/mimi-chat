@@ -1,10 +1,15 @@
+import { AuthUser } from '@/@types/users';
 import { gos, eos } from './helper';
 import { getProfile, modifiedAxiosResponse } from './../../../api/auth/AuthRequest';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '@/app/store';
 import { createSlice } from '@reduxjs/toolkit';
-
-const initalAuthState = {
+type initialStateType = {
+    user: AuthUser | null,
+    loading: 'idle' | 'pending' | 'idle',
+    error: string
+}
+const initalAuthState : initialStateType = {
     user : null,
     loading: 'idle',
     error: ""
@@ -36,7 +41,7 @@ export const userSlice = createSlice({
         })
         builder.addCase(fetchProfile.fulfilled, (state, action) => {
             state.loading = 'idle';
-            state.user = action.payload;
+            state.user = action.payload.data;
         })
         builder.addCase(fetchProfile.rejected, (state, action) => {
             state.loading = 'idle';
@@ -45,7 +50,7 @@ export const userSlice = createSlice({
     }
 })
 
-export const selectUser = (state : RootState) => state.user.user;
+export const selectUser = (state : RootState) => state.user!.user;
 
 export default userSlice.reducer;
 // export const {} = userSlice.actions;

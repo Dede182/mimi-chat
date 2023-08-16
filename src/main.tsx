@@ -8,6 +8,9 @@ import { I18nextProvider } from 'react-i18next'
 import i18n from './services/i18n.js'
 import FloatSetting from './components/tools/FloatSetting.tsx'
 import 'animate.css';
+import axios from 'axios'
+
+axios.defaults.withCredentials = true;
 const startApp = async () => {
   // Wait for i18n initialization
 

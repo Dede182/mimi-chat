@@ -1,12 +1,12 @@
-import { useAppDispatch, useAppSelector } from "@/app/hooks"
+import {  useAppSelector } from "@/app/hooks"
 import { selectSidebar } from "@/app/slices/sidebarSlice";
 import './style.scss';
 import { CurrentAside } from "./Aside/types";
 import { AiFillSetting, AiFillStar, HiUserGroup, FaPowerOff } from "./SidebarHelper"
 import Cookies from "js-cookie";
-import { useEffect } from "react";
-import { fetchProfile, selectUser } from "@/app/slices/auth/UserSlice";
+import {  selectUser } from "@/app/slices/auth/UserSlice";
 import { MemorizedSidebarItem } from "./SidebarItem";
+import { memo, useMemo } from "react";
 
 const logout = () => {
 
@@ -14,23 +14,23 @@ const logout = () => {
     window.location.href = "/login"
 }
 const Sidebar = () => {
-    const dispatch = useAppDispatch();
-    const profile = useAppSelector(selectUser);
-    const token = useAppSelector(token => token.auth.token);
-
-
-    useEffect(() => {
-        if (!profile) {
-            dispatch(fetchProfile({ url: '/user/profile', token: token! }))
-        }
-    }, [dispatch, profile, token])
-
-    const user = profile?.data ;
+    
+    const user = useAppSelector(selectUser);
+   
     const sidebar = useAppSelector(selectSidebar);
 
     const sidebarWidth = sidebar.isOpen ? 'w-[min(8rem,10rem)]' : 'w-[0%] ';
     const sidebarUl = sidebar.isOpen ? 'scale-1' : 'scale-0 ';
 
+    //memorize the icon
+    const icons = useMemo(() => {
+        return {
+            star : <AiFillStar />,
+           contacts: <HiUserGroup />,
+          setting: <AiFillSetting />,
+          powerOff : <FaPowerOff />,
+        }
+    },[])
 
     return (
         <div className={`${sidebarWidth} sidebar gap-12`}>
@@ -49,23 +49,25 @@ const Sidebar = () => {
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={<AiFillStar />} aside={CurrentAside.FAVORITES} />
+                    <MemorizedSidebarItem icon={icons.star} aside={CurrentAside.FAVORITES} />
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={<HiUserGroup />} akey="move" aside={CurrentAside.CONTACTS} />
+                    <MemorizedSidebarItem icon={icons.contacts} akey="move" aside={CurrentAside.CONTACTS} />
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={<AiFillSetting />} aside={CurrentAside.SETTINGS} />
+                    <MemorizedSidebarItem icon={icons.setting} aside={CurrentAside.SETTINGS} />
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={<FaPowerOff />} akey="move" clickFn={logout} />
+                    <MemorizedSidebarItem icon={icons.powerOff} akey="move" clickFn={logout} />
                 </li>
             </ul>
         </div>
     )
 }
 
-export default Sidebar
+const MemoSidebar = memo(Sidebar)
+
+export default MemoSidebar

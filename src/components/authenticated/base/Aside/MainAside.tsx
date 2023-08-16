@@ -1,12 +1,13 @@
 import { t } from 'i18next'
 import ChatHeadSwiper from './subs/ChatHeadSwiper'
 import { ImSearch } from 'react-icons/im'
-import ChatLine from './subs/ChatLine'
+import { MemorizedChatLine } from './subs/ChatLine'
+import { CastType } from './subs/ChatHeadSwiperItem'
 
 const MainAside = () => {
 
-  const casts = {
-    cast: [
+  const casts : Array<CastType> = 
+   [
       {
         id: 1,
         name: 'cast 1',
@@ -40,10 +41,10 @@ const MainAside = () => {
         name: 'cast 4',
       },
     ]
-  }
+  
   return (
     <div className="animate__animated animate__fadeIn ">
-      <div className="flex flex-col  pt-6 pb-1 gap-4 h-[100vh]">
+      <div className="flex flex-col  pt-6  gap-4 h-[100vh]">
 
         <div className="recent-header flex flex-col gap-1 px-10">
           <h3 className="text-3xl font-bold capitalize">{t('recent')}</h3>
@@ -75,13 +76,13 @@ const MainAside = () => {
 
           <div className="flex flex-col mt-8">
 
-            <ChatLine />        
-            <ChatLine />        
-            <ChatLine />        
-            <ChatLine />        
-            <ChatLine />        
-            <ChatLine />        
-            <ChatLine />        
+            <MemorizedChatLine />        
+            <MemorizedChatLine />        
+            <MemorizedChatLine />        
+            <MemorizedChatLine />        
+            <MemorizedChatLine />        
+            <MemorizedChatLine />        
+            <MemorizedChatLine />        
 
           </div>
         </div>

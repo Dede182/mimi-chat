@@ -1,3 +1,4 @@
+import { memo } from "react"
 
 const ChatLine = () => {
   return (
@@ -27,4 +28,4 @@ const ChatLine = () => {
   )
 }
 
-export default ChatLine
+export const MemorizedChatLine = memo(ChatLine)

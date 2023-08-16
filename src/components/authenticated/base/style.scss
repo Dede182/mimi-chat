@@ -71,7 +71,7 @@
 }
 
 .sidebar-item {
-    background-color: var(--color-secondary);
+    background-color: var(--color-secondary) !important;
     @apply w-10 h-10 flex items-center justify-center rounded-full;
 
     &:hover {

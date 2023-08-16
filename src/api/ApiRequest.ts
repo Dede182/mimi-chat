@@ -19,6 +19,7 @@ export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosR
     axios.interceptors.request.use((config:InternalAxiosRequestConfig ) => {
         config.headers["Content-Type"] = "application/json";
         config.headers["Accept"] = "application/json";
+        
         if(userToken !== undefined)
         {
         config.headers['Authorization'] = `Bearer ${userToken}`;   
