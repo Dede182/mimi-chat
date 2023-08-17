@@ -2,17 +2,14 @@ import { AuthUser } from '@/@types/users';
 import { useAppSelector } from '@/app/hooks'
 import { selectUser } from '@/app/slices/auth/UserSlice';
 import { memo } from 'react';
-export type MessageType = {
-    message: string,
-    user : AuthUser,
-}
+import { ChatMessageDatatType } from './types/ChatTypes';
 
 
-const ChatMessageLine = ({message } : {message : MessageType}) => {
+const ChatMessageLine = ({message } : {message : ChatMessageDatatType}) => {
 
     const authUser = useAppSelector(selectUser) as AuthUser | null;
 
-    const whoSend = message.user?.id == authUser?.id ? 'chat-end' : 'chat-start';
+    const whoSend = message.sender_id == authUser?.id ? 'chat-end' : 'chat-start';
 
     const chatMessage = ( <div className={`chat ${whoSend}`}>
 
@@ -30,12 +27,12 @@ const ChatMessageLine = ({message } : {message : MessageType}) => {
 }
 
 const isSameMessage = (
-  prevProps: Readonly<{ message: MessageType }>,
-  nextProps: Readonly<{ message: MessageType }>
+  prevProps: Readonly<{ message: ChatMessageDatatType }>,
+  nextProps: Readonly<{ message: ChatMessageDatatType }>
 ) => {
   return (
     prevProps.message.message === nextProps.message.message &&
-    prevProps.message.user === nextProps.message.user
+    prevProps.message.sender_id === nextProps.message.sender_id
   );
 };
 

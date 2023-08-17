@@ -1,3 +1,4 @@
+import { onlineActiveUserSlice } from './slices/chat/onlineActiveUserSlice';
 import { userSlice } from './slices/auth/UserSlice';
 import { authSlice } from './slices/auth/AuthSlices';
 import { settingSlice } from './slices/settingSlices';
@@ -12,6 +13,7 @@ export const store = configureStore({
     auth : authSlice.reducer,
     sidebar : sidebarSlice.reducer,
     user : userSlice.reducer,
+    onlineActiveUsers : onlineActiveUserSlice.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

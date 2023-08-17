@@ -28,7 +28,6 @@ export class BaseEchoManager implements EchoContract {
     public echo!: Echo | null;
 
     public constructor(public token?: string) {
-        console.log('BaseEchoManager', token);
     }
 
 

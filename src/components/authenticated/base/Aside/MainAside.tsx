@@ -3,8 +3,24 @@ import ChatHeadSwiper from './subs/ChatHeadSwiper'
 import { ImSearch } from 'react-icons/im'
 import { MemorizedChatLine } from './subs/ChatLine'
 import { CastType } from './subs/ChatHeadSwiperItem'
+import { ChatListDataType } from '../../Chat/types/ChatTypes'
+import { useEffect, useState } from 'react'
+import { getChatData } from '@/api/generals/ChatList'
+import Cookies from 'js-cookie'
 
 const MainAside = () => {
+
+  const [chatList, setChatList] = useState<Array<ChatListDataType>>([])
+  const token = Cookies.get('token')
+  useEffect(() => {
+    const fetchChatList = async () => {
+      const res = await getChatData('user/chats/list',token!)
+      setChatList(res.data.data)
+    }
+    fetchChatList()
+  }, [token])
+
+  console.log(chatList)
 
   const casts : Array<CastType> = 
    [
@@ -76,13 +92,9 @@ const MainAside = () => {
 
           <div className="flex flex-col mt-8">
 
-            <MemorizedChatLine />        
-            <MemorizedChatLine />        
-            <MemorizedChatLine />        
-            <MemorizedChatLine />        
-            <MemorizedChatLine />        
-            <MemorizedChatLine />        
-            <MemorizedChatLine />        
+            {chatList.map((chat,index) => (
+              <MemorizedChatLine key={index} chatline={chat} />
+            ))}      
 
           </div>
         </div>

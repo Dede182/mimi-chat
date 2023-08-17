@@ -27,7 +27,6 @@ const renderAside = (aside: CurrentAside) => {
 }
 
 const Aside = () => {
-  console.log('aside')
   const aside = useAppSelector(selectSidebar).aside;
   
   const currentAside = useMemo(()=>renderAside(aside),[aside]);
@@ -36,7 +35,6 @@ const Aside = () => {
   const dispatch = useAppDispatch();
 
   const toggle = () => {
-    console.log('here');
     dispatch(toggleSidebar());
   }
 

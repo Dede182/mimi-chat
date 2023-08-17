@@ -1,25 +1,39 @@
 
 import './styles.scss'
 // import { PublicEchoManager } from "./EchoManager/PublicEchoManager";
-import {LuSticker} from 'react-icons/lu'
+import { LuSticker } from 'react-icons/lu'
 import { HiPlus } from 'react-icons/hi'
-import { BsEmojiLaughing,BsFillSendFill } from 'react-icons/bs'
+import { BsEmojiLaughing, BsFillSendFill } from 'react-icons/bs'
 import { MemoizedChatBtnCircle } from './ChatBtnCircle';
 import { useForm } from 'react-hook-form';
 import { useEffect, useMemo, useState } from 'react';
-
-import { AuthUser } from '@/@types/users';
-import MemorizedChatMessageLine, { MessageType } from './ChatMessageLine';
-import { useAppSelector } from '@/app/hooks';
-import { selectUser } from '@/app/slices/auth/UserSlice';
+import MemorizedChatMessageLine from './ChatMessageLine';
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
+import { useParams } from 'react-router-dom';
+import { ChatMessageDatatType } from './types/ChatTypes';
+import { getChatData } from '@/api/generals/ChatList';
+import { useAppSelector } from '@/app/hooks';
+import { selectOnlineActiveUsers } from '@/app/slices/chat/onlineActiveUserSlice';
+
+interface FriendType {
+  name: string,
+  email: string,
+  profile_photo: string,
+  isActive: boolean,
+}
+
 const Chat = () => {
 
-  const [messages, setMessages] = useState<MessageType[]>([]);
-  const user = useAppSelector(selectUser)  as AuthUser;
+  const [messages, setMessages] = useState<ChatMessageDatatType[]>([]);
+  const [friend, setFriend] = useState<FriendType>();
   const token = Cookies.get('token');
-  console.log("🚀 ~ file: ddChat.tsx:s21 ~ Chat ~ token:", token)
+  const params = useParams();
+  const chatId = params['id'];
+  const channel = `single.chat.${chatId}`;
+  const onlineActiveUserSlice = useAppSelector(selectOnlineActiveUsers);
+  const onlineActiveUser = onlineActiveUserSlice.find((user) => user.name == friend?.name);
+  const isOnline = onlineActiveUser ? 'online' : 'offline';
 
   const {
     register,
@@ -27,11 +41,9 @@ const Chat = () => {
   } = useForm<any>();
 
   const onSubmit = (data: any) => {
-    
     sendMessage(data.message)
   }
 
-  const channelManager = useMemo(() => new PresenceEchoManager('presence.chat.1',token !), [token])
   //memorize the icons
   const icons = useMemo(() => {
     return {
@@ -43,21 +55,33 @@ const Chat = () => {
   }, [])
   // Usage
   useEffect(() => {
-    channelManager.presenceSubscribe(() => {
-      console.log('Subscribed tso channel');
-    })
-      .listen('.test', (e: any) => {
-        console.log('listen')
-        setMessages((prevMessages) => [...prevMessages, e])
-        console.log(messages)
+    const channelManager = new PresenceEchoManager(channel, token!)
+
+    channelManager.presenceSubscribe()
+      .joining((user: any) => {
+
+        console.log(user.name + 'joining');
       })
-  
-      console.log(messages)
-  
-  }, [channelManager])
- 
-  const sendMessage = (message : string) => {
-    channelManager.sendMessage(message,user.id)
+      .leaving((user: any) => {
+        console.log(user)
+      })
+
+  }, [channel, messages, token, chatId])
+
+  useEffect(() => {
+    const fetchChatList = async () => {
+      const res = await getChatData(`user/chats/messages/${chatId}`, token!)
+      setMessages(res.data.data.chatMessages.data)
+      setFriend(res.data.data.friend.user)
+
+    }
+    fetchChatList()
+  }, [chatId, token])
+
+
+  const sendMessage = (message: string) => {
+    console.log(message);
+    // channelManager.sendMessage(message,user.id)
   }
 
 
@@ -68,9 +92,9 @@ const Chat = () => {
         <div className="h-full flex flex-col gap-4 ">
 
           <div className="chat-banner h-full w-full ">
-            <div className="avatar w-[20%]">
+            <div className={`avatar ${isOnline}`}>
               <div className="w-14 mask mask-squircle">
-                <img src={`https://i.pravatar.cc/250?img=26`} />
+                <img src={friend?.profile_photo} />
               </div>
             </div>
           </div>
@@ -78,36 +102,37 @@ const Chat = () => {
           <div className="chatBody scroll h-full overflow-y-scroll">
 
             {/* chat start */}
-             {
-                messages.map((message : MessageType,index) => (
-                  <MemorizedChatMessageLine key={index} message={message} />
-                ))
-             }
+
+            {messages.length != 0 ?
+              messages.map((message: ChatMessageDatatType, index) => (
+                <MemorizedChatMessageLine key={index} message={message} />
+              )) : <p>Start a chat</p>
+            }
           </div>
         </div>
       </div>
 
       <div className="chat-input w-full h-[10%] ">
-     
-        <form onSubmit={handleSubmit(onSubmit)}  className="flex items-center justify-evenly  h-full gap-2">
-            
-            <div className="w-2/6 flex justify-evenly">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-evenly  h-full gap-2">
+
+          <div className="w-2/6 flex justify-evenly">
             <MemoizedChatBtnCircle icon={icons.sticker} />
             <MemoizedChatBtnCircle icon={icons.emoji} />
             <MemoizedChatBtnCircle icon={icons.plus} />
-            </div>
-          
+          </div>
 
-            <textarea 
+
+          <textarea
             {...register('message')}
             placeholder='Write your Message' className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" ></textarea>
 
-            <div className="w-1/6">
+          <div className="w-1/6">
 
             <MemoizedChatBtnCircle type='submit' icon={icons.send} />
 
-            </div>
-                
+          </div>
+
         </form>
 
       </div>

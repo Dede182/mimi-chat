@@ -5,33 +5,27 @@ import { ApiRequest } from '@/api/ApiRequest';
 
 export class PresenceEchoManager extends BaseEchoManager{
   private channelName: string;
-  private subscribedCallback: (() => void) | null = null;
+  private subscribedCallback: ((data : any) => void) | null = null;
 
   constructor(channelName: string, token: string) {
-    console.log(token);
     super(token);
     this.channelName = channelName;
     this.setupEcho();
 
   }
 
-  presenceSubscribe(subscribedCallback?: () => void) {
+  presenceSubscribe(subscribedCallback?: (data:any) => void)  {
     this.subscribedCallback = subscribedCallback || null;
         
     this.echo!.join(this.channelName)
       .here((user : any) => {
-        console.log('hesre');
+        console.log(this.channelName + 'channel connected',user)
         if (this.subscribedCallback) {
-          this.subscribedCallback();
+          this.subscribedCallback(user);
         }
-        console.log(user)
-      })
-      .joining((user : any) => {
-        console.log('joining');
       })
       
-      
-      return this.echo!.channel(this.channelName)
+      return this.echo!.join(this.channelName)
   }
 
   async sendMessage(message: string,user_id: number)  {

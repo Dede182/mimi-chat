@@ -23,7 +23,7 @@ interface Route {
   
 export const routesCollection : Record<string,Route> = {
     chat:  {
-      path: '/chat',
+      path: '/chat/:id',
       element: middleware(Guard, <Chat/>)
     },
     login :{
