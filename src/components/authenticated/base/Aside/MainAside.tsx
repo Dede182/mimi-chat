@@ -1,12 +1,13 @@
 import { t } from 'i18next'
 import ChatHeadSwiper from './subs/ChatHeadSwiper'
 import { ImSearch } from 'react-icons/im'
-import { MemorizedChatLine } from './subs/ChatLine'
+
 import { CastType } from './subs/ChatHeadSwiperItem'
 import { ChatListDataType } from '../../Chat/types/ChatTypes'
 import { useEffect, useState } from 'react'
 import { getChatData } from '@/api/generals/ChatList'
 import Cookies from 'js-cookie'
+import MemorizedChatLine from './subs/ChatLine'
 
 const MainAside = () => {
 

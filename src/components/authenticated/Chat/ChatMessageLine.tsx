@@ -9,7 +9,7 @@ const ChatMessageLine = ({message } : {message : ChatMessageDatatType}) => {
 
     const authUser = useAppSelector(selectUser) as AuthUser | null;
 
-    const whoSend = message.sender_id == authUser?.id ? 'chat-end' : 'chat-start';
+    const whoSend = message?.sender_id == authUser?.id ? 'chat-end' : 'chat-start';
 
     const chatMessage = ( <div className={`chat ${whoSend}`}>
 

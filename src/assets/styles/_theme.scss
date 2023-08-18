@@ -5,14 +5,15 @@
   --color-soft : #e0ecf8;
   --color-hover : #f4f4f4;
   --color-font: #000;
+  --color-font-fade : #1a1a1a80;
     
   --color-border: #eff1f2;
+  --color-shadow : #0000001b;
 
   --bs-btn-color: #fff;
   --bs-btn-bg: #1c9dea;
   --bs-btn-border-color: #1c9dea;
   --bs-btn-hover-color: #fff;
-  --bs-btn-hover-bg: #0b5ed7;
   --bs-btn-hover-border-color: #0a58ca;
   --bs-btn-focus-shadow-rgb: 49, 132, 253;
   --bs-btn-active-color: #fff;
@@ -35,6 +36,7 @@
     --color-soft : rgb(33, 35, 46);
     --color-hover : #39393bf6;
     --color-font: #ffffff;
-
-    --color-border: #3d3e4d
+    --color-font-fade :rgba(232, 231, 231, 0.877);
+    --color-border: #3d3e4d;
+    --color-shadow : #e0dfdf0a;
   }

@@ -26,3 +26,33 @@ export const getChatData = async (url: string, token: string) => {
         }
     }
 }
+
+export const sendEventMessage =async(message: string,user_id: number,chat_id: string)  =>  {
+
+    return await ApiRequest({
+      method: 'post',
+      url: '/user/chats/store/messages',
+      params : {
+        message : message,
+        sender_id : user_id,
+        chat_id : chat_id,
+      }
+    }).catch((err: any)=>{
+      console.log(err)
+    })
+  
+   }
+
+   export const updateLastMessage =async(chat_id: string)  =>  {
+
+    return await ApiRequest({
+      method: 'put',
+      url: '/user/chats/update/lastmessage',
+      params : {
+        chat_id : chat_id,
+      }
+    }).catch((err: any)=>{
+      console.log(err)
+    })
+  
+   }

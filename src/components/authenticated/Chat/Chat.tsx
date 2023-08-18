@@ -6,15 +6,18 @@ import { HiPlus } from 'react-icons/hi'
 import { BsEmojiLaughing, BsFillSendFill } from 'react-icons/bs'
 import { MemoizedChatBtnCircle } from './ChatBtnCircle';
 import { useForm } from 'react-hook-form';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import MemorizedChatMessageLine from './ChatMessageLine';
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
 import { useParams } from 'react-router-dom';
 import { ChatMessageDatatType } from './types/ChatTypes';
-import { getChatData } from '@/api/generals/ChatList';
+import { getChatData, sendEventMessage, updateLastMessage } from '@/api/generals/ChatList';
 import { useAppSelector } from '@/app/hooks';
 import { selectOnlineActiveUsers } from '@/app/slices/chat/onlineActiveUserSlice';
+import { selectUser } from '@/app/slices/auth/UserSlice';
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 
 interface FriendType {
   name: string,
@@ -27,6 +30,9 @@ const Chat = () => {
 
   const [messages, setMessages] = useState<ChatMessageDatatType[]>([]);
   const [friend, setFriend] = useState<FriendType>();
+  const [page, setPage] = useState<number>(1);
+  const [lastPage, setLastPage] = useState<number>(0);
+  const [loading,setLoading] = useState<boolean>(true);
   const token = Cookies.get('token');
   const params = useParams();
   const chatId = params['id'];
@@ -34,7 +40,7 @@ const Chat = () => {
   const onlineActiveUserSlice = useAppSelector(selectOnlineActiveUsers);
   const onlineActiveUser = onlineActiveUserSlice.find((user) => user.name == friend?.name);
   const isOnline = onlineActiveUser ? 'online' : 'offline';
-
+  const user = useAppSelector(selectUser);
   const {
     register,
     handleSubmit,
@@ -44,6 +50,22 @@ const Chat = () => {
     sendMessage(data.message)
   }
 
+  const fetchChatList = useCallback(async (pageNum: number) => {
+    const url = `user/chats/messages/${chatId}?page=${pageNum}`;
+    const res = await getChatData(url, token!)
+    //reverse the chat messages
+    const reversed = res.data.data.chatMessages.data;
+    setLastPage(res.data.data.chatMessages.last_page)
+    setMessages(reversed)
+    setFriend(res.data.data.friend.user)
+    setLoading(false);
+
+
+  }, [chatId, token])
+
+  function mig(){
+    console.log('miig')
+  }
   //memorize the icons
   const icons = useMemo(() => {
     return {
@@ -57,33 +79,41 @@ const Chat = () => {
   useEffect(() => {
     const channelManager = new PresenceEchoManager(channel, token!)
 
-    channelManager.presenceSubscribe()
+    channelManager.presenceSubscribe(
+      () => {
+        updateLastMessage(chatId!);
+      }
+    )
       .joining((user: any) => {
-
         console.log(user.name + 'joining');
+
       })
       .leaving((user: any) => {
         console.log(user)
       })
+      .listen('.messageReceived', (e: any) => {
+        console.log(e)
+        setMessages((prev) => [...prev, e[0]])
+      })
 
-  }, [channel, messages, token, chatId])
+  }, [channel, token, chatId])
+
 
   useEffect(() => {
-    const fetchChatList = async () => {
-      const res = await getChatData(`user/chats/messages/${chatId}`, token!)
-      setMessages(res.data.data.chatMessages.data)
-      setFriend(res.data.data.friend.user)
 
-    }
-    fetchChatList()
-  }, [chatId, token])
+    fetchChatList(page)
+  }, [chatId, token, page, fetchChatList])
 
 
   const sendMessage = (message: string) => {
-    console.log(message);
-    // channelManager.sendMessage(message,user.id)
+    sendEventMessage(message, user!.id, chatId!)
   }
+  //scroll to whole bottom
+  // useEffect(() => {
+  //   const chatBody = document.querySelector('.chatBody');
 
+  //   chatBody?.scrollTo(0, chatBody.scrollHeight)
+  // }, [messages])
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all">
@@ -91,11 +121,15 @@ const Chat = () => {
       <div className="w-full h-[85%] px-12 pt-10 ">
         <div className="h-full flex flex-col gap-4 ">
 
-          <div className="chat-banner h-full w-full ">
+          <div className="chat-banner h-full w-full flex items-center gap-6">
             <div className={`avatar ${isOnline}`}>
               <div className="w-14 mask mask-squircle">
                 <img src={friend?.profile_photo} />
               </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h1 className="text-lg font-bold">{friend?.name}</h1>
+              <p className="text-sm fade-text">{friend?.email}</p>
             </div>
           </div>
 
@@ -103,10 +137,23 @@ const Chat = () => {
 
             {/* chat start */}
 
-            {messages.length != 0 ?
-              messages.map((message: ChatMessageDatatType, index) => (
-                <MemorizedChatMessageLine key={index} message={message} />
-              )) : <p>Start a chat</p>
+            {loading ? <p>loadiing</p>:
+              <>
+                  {
+                    messages.map((message: ChatMessageDatatType, index) => (
+                      <MemorizedChatMessageLine key={index} message={message} />
+                    ))
+                  }
+                <InfiniteScroll
+                  dataLength={messages.length}
+                  next={mig}
+                  refreshFunction={mig}
+                  hasMore={true}
+                  loader={<h4>Loading...</h4>}
+                  pullDownToRefresh={true}
+                  pullDownToRefreshContent={<div style={{ textAlign: 'center' }}>Circle SVG/img</div>}
+                  ></InfiniteScroll>
+              </> 
             }
           </div>
         </div>

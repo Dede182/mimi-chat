@@ -26,3 +26,8 @@
 .invalid-feedback{
      color: rgb(221, 8, 8);
 }
+
+.fade-text{
+     color: var(--color-font-fade);
+     font-family : $font-primary;
+}

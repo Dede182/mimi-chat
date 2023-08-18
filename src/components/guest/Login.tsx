@@ -1,24 +1,13 @@
 import { t } from "i18next"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { authService, clearError, selectAuth } from "@/app/slices/auth/AuthSlices";
-import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from "react-hook-form";
 import { loginSubmitBody, loginSubmitForm } from "./types/guestTypes";
 import { useNavigate } from "react-router-dom";
 import InputField, { HeroError } from "./InputField";
 import PrimaryButton from "../ui/Fields/PrimaryButton";
-
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .required('Email is required')
-    .email('Email is invalid'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .max(40, 'Password must not exceed 40 characters'),
-});
+import { loginValidationSchema } from "./validations/authValiidation";
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +21,7 @@ const Login = () => {
     handleSubmit,
     formState: { errors }
   } = useForm<loginSubmitForm>({
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver(loginValidationSchema)
   });
 
   const onSubmit = async(data: loginSubmitForm) => {
@@ -41,18 +30,15 @@ const Login = () => {
       body : data
      }
     await dispatch(authService(body))
-
     setTimeout(() => {
     dispatch(clearError())
     }, 4000);
-    console.log(loading)
-    // reset();
   };
 
-    if(loading == 'successful')
-    {
-      navigate('/chat')
-    }
+  if(loading == 'successful')
+  {
+    navigate('/chat/11')
+  }
 
   return (
     <div className="min-w-[280px]">

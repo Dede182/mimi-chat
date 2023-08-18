@@ -1,28 +1,14 @@
 import { t, } from "i18next"
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
 import { authService, selectAuth } from "@/app/slices/auth/AuthSlices";
-import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from "react-hook-form";
 import { registerSubmitBody, registerSubmitForm } from "./types/guestTypes";
 import { useNavigate } from "react-router-dom";
 import InputField, { HeroError } from "./InputField";
 import PrimaryButton from "../ui/Fields/PrimaryButton";
+import { RegisterValidationSchema } from "./validations/authValiidation";
 
-const validationSchema = Yup.object().shape({
-  name : Yup.string()
-    .required('Name is required'),
-  email: Yup.string()
-    .required('Email is required')
-    .email('Email is invalid'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(6, 'Password must be at least 6 characters')
-    .max(40, 'Password must not exceed 40 characters'),
-  password_confirmation: Yup.string()
-    .required('Password confirmation is required')
-    .oneOf([Yup.ref('password')], 'Passwords must match')
-});
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -36,7 +22,7 @@ const Register = () => {
     handleSubmit,
     formState: { errors }
   } = useForm<registerSubmitForm>({
-    resolver: yupResolver(validationSchema)
+    resolver: yupResolver(RegisterValidationSchema)
   });
 
   const onSubmit = async (data: registerSubmitForm) => {
