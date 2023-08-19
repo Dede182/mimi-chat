@@ -6,7 +6,7 @@ import { HiPlus } from 'react-icons/hi'
 import { BsEmojiLaughing, BsFillSendFill } from 'react-icons/bs'
 import { MemoizedChatBtnCircle } from './ChatBtnCircle';
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MemorizedChatMessageLine from './ChatMessageLine';
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
@@ -17,7 +17,7 @@ import { useAppSelector } from '@/app/hooks';
 import { selectOnlineActiveUsers } from '@/app/slices/chat/onlineActiveUserSlice';
 import { selectUser } from '@/app/slices/auth/UserSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
+import { BeatLoader } from "react-spinners";
 
 interface FriendType {
   name: string,
@@ -32,7 +32,8 @@ const Chat = () => {
   const [friend, setFriend] = useState<FriendType>();
   const [page, setPage] = useState<number>(1);
   const [lastPage, setLastPage] = useState<number>(0);
-  const [loading,setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [currentChatId , setCurrentChatId] = useState<string>();
   const token = Cookies.get('token');
   const params = useParams();
   const chatId = params['id'];
@@ -41,8 +42,10 @@ const Chat = () => {
   const onlineActiveUser = onlineActiveUserSlice.find((user) => user.name == friend?.name);
   const isOnline = onlineActiveUser ? 'online' : 'offline';
   const user = useAppSelector(selectUser);
+  const chatPrefix = useRef(0);
   const {
     register,
+    reset,
     handleSubmit,
   } = useForm<any>();
 
@@ -50,22 +53,34 @@ const Chat = () => {
     sendMessage(data.message)
   }
 
+  useEffect(() => {
+    setCurrentChatId(chatId);
+    setMessages([]);
+    setPage(1);
+    
+    return ()=>{
+      setCurrentChatId(undefined);
+    }
+  },[chatId, currentChatId])
+
   const fetchChatList = useCallback(async (pageNum: number) => {
     const url = `user/chats/messages/${chatId}?page=${pageNum}`;
     const res = await getChatData(url, token!)
     //reverse the chat messages
     const reversed = res.data.data.chatMessages.data;
+    chatPrefix.current = res.data.data.chat_prefix;
+  
     setLastPage(res.data.data.chatMessages.last_page)
-    setMessages(reversed)
+    setMessages((prevMessages) => [...prevMessages, ...reversed]);
+    
     setFriend(res.data.data.friend.user)
     setLoading(false);
 
+    return ()=>{
+      setMessages([]);
+    }
 
-  }, [chatId, token])
-
-  function mig(){
-    console.log('miig')
-  }
+  }, [chatId, currentChatId, token])
   //memorize the icons
   const icons = useMemo(() => {
     return {
@@ -78,7 +93,7 @@ const Chat = () => {
   // Usage
   useEffect(() => {
     const channelManager = new PresenceEchoManager(channel, token!)
-
+    console.log('channel run ')
     channelManager.presenceSubscribe(
       () => {
         updateLastMessage(chatId!);
@@ -93,27 +108,39 @@ const Chat = () => {
       })
       .listen('.messageReceived', (e: any) => {
         console.log(e)
-        setMessages((prev) => [...prev, e[0]])
+        setMessages((prev) => [e[0], ...prev])
+        reset();
       })
 
   }, [channel, token, chatId])
 
 
   useEffect(() => {
-
+    console.log('chat Id' + chatId + ' page run',[messages])
     fetchChatList(page)
-  }, [chatId, token, page, fetchChatList])
+    setCurrentChatId(chatId !);
+  }, [chatId, token])
 
 
   const sendMessage = (message: string) => {
-    sendEventMessage(message, user!.id, chatId!)
+    sendEventMessage(message, user!.id, chatId!, chatPrefix.current)
   }
-  //scroll to whole bottom
+  // scroll to whole bottom
   // useEffect(() => {
   //   const chatBody = document.querySelector('.chatBody');
 
   //   chatBody?.scrollTo(0, chatBody.scrollHeight)
   // }, [messages])
+
+  const loadMore = useCallback(() => {
+    const pageNum = page + 1;
+    if (lastPage >= pageNum) {
+      setPage(pageNum);
+      console.log('b run')
+    } else {
+      return;
+    }
+  }, [lastPage, page])
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all">
@@ -133,27 +160,39 @@ const Chat = () => {
             </div>
           </div>
 
-          <div className="chatBody scroll h-full overflow-y-scroll">
+          <div id="chatBody" className="chatBody flex flex-col-reverse scroll h-[100vh] overflow-y-scroll ">
 
             {/* chat start */}
 
-            {loading ? <p>loadiing</p>:
+            {loading ? <p>loadiing</p> :
               <>
-                  {
-                    messages.map((message: ChatMessageDatatType, index) => (
-                      <MemorizedChatMessageLine key={index} message={message} />
-                    ))
-                  }
                 <InfiniteScroll
                   dataLength={messages.length}
-                  next={mig}
-                  refreshFunction={mig}
-                  hasMore={true}
-                  loader={<h4>Loading...</h4>}
-                  pullDownToRefresh={true}
-                  pullDownToRefreshContent={<div style={{ textAlign: 'center' }}>Circle SVG/img</div>}
-                  ></InfiniteScroll>
-              </> 
+                  next={loadMore}
+                  style={{ display: 'flex', flexDirection: 'column-reverse' }}
+                  scrollableTarget="chatBody"
+                  hasMore={lastPage >= page}
+                  inverse={true}
+                  loader={lastPage >= page ? (
+                    <div className="w-full text-center ">
+                      <BeatLoader color='blue' loading={true} size={10} />
+                    </div>
+
+                  ) : <div></div>
+                  }>
+                    
+                  {
+                  messages.map((message) => (
+                    <>
+                    <MemorizedChatMessageLine key={ `chat_${chatId}` + message.id } message={message} />
+
+                    </>
+                  ))
+                  }
+                </InfiniteScroll>
+
+
+              </>
             }
           </div>
         </div>
@@ -170,9 +209,13 @@ const Chat = () => {
           </div>
 
 
-          <textarea
+          {/* <textarea
             {...register('message')}
-            placeholder='Write your Message' className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" ></textarea>
+            placeholder='Write your Message' className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" ></textarea> */}
+
+          <input type='text'
+            {...register('message')}
+            placeholder='Write your Message' className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" />
 
           <div className="w-1/6">
 

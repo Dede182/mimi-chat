@@ -21,7 +21,6 @@ const MainAside = () => {
     fetchChatList()
   }, [token])
 
-  console.log(chatList)
 
   const casts : Array<CastType> = 
    [
@@ -94,7 +93,7 @@ const MainAside = () => {
           <div className="flex flex-col mt-8">
 
             {chatList.map((chat,index) => (
-              <MemorizedChatLine key={index} chatline={chat} />
+              <MemorizedChatLine key={chat.chat_id || index} chatline={chat} />
             ))}      
 
           </div>

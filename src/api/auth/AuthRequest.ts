@@ -21,9 +21,7 @@ export const postLogin = async (url: string, body: any) => {
         if(response instanceof AxiosError)
         {
             return response.response
-        }
-        console.log("🚀 ~ file: AuthRequest.ts:21 ~ postLogin ~ response:", response)
-        
+        }        
         return response;
 
     }
@@ -47,7 +45,6 @@ export const getProfile = async (url: string, token: string) => {
         {
             return response.response
         }
-        console.log("🚀 ~ file: AuthRequest.ts:21 ~ postLogin ~ response:", response)
         
         return response;
 

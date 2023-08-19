@@ -28,20 +28,20 @@ const Layout = () => {
     channelManager
       .presenceSubscribe((data) => {
         dispatch(setInitialOnlineUsers(data));
-        console.log(data.length + ' users active online');
+        // console.log(data.length + ' users active online');
       })
       .joining((user: any) => {
-        console.log(channel + 'channel connected', user);
+        // console.log(channel + 'channel connected', user);
         dispatch(addOnlineUser(user));
       })
       .leaving((user: any) => {
-        console.log(channel + ' channel abandoned', user.name);
+        // console.log(channel + ' channel abandoned', user.name);
         dispatch(removeOnlineUser(user));
       });
   
   }, [ channel, token]);
 
-  console.log(onlineActiveUsers)
+  // console.log(onlineActiveUsers)
   return (
     <div className='flex w-full max-h-[100vh]'>
       <MemoSidebar />

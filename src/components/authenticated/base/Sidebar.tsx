@@ -33,7 +33,7 @@ const Sidebar = () => {
     },[])
 
     return (
-        <div className={`${sidebarWidth} sidebar gap-12`}>
+        <div className={`${sidebarWidth} sidebar gap-12 hidden md:flex`}>
 
             <div className=" sidebar-logo">
                 hi

@@ -12,7 +12,6 @@ export const onlineActiveUserSlice = createSlice({
     initialState : initialOnlineUsers,
     reducers : {
         setInitialOnlineUsers : (state,action) => {
-            console.log(action.payload)
             const users = action.payload
             state.push(...users)
         },

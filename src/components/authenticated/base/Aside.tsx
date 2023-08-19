@@ -57,7 +57,7 @@ const Aside = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       
-      <aside  className={`${asideClass} relative `}>
+      <aside  className={`${asideClass} relative hidden md:block`}>
 
       {showCrossButton ? <button className="absolute top-3 right-2 w-6 h-6 animate__animated animate__fadeIn z-20" onClick={()=>goDefaultAside()} >
         <ImCrossIcon />
