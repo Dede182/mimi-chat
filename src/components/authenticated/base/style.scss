@@ -71,7 +71,7 @@
 }
 
 .sidebar-item {
-    background-color: var(--color-secondary) !important;
+    background-color: var(--color-secondary) ;
     @apply w-10 h-10 flex items-center justify-center rounded-full;
 
     &:hover {
@@ -92,7 +92,42 @@
     @apply badge badge-lg badge-neutral text-white h-8 px-4 capitalize;
 }
 
+.chat-line {
+    &:hover {
+        background-color: var(--color-tertiary);
+    }
+}
+
 
 .active-chat{
     background-color: var(--color-soft);
 }
+
+.fade-text{
+    color: var(--color-font);
+    opacity: 0.8;
+}
+
+.unread{
+    font-weight: 500;
+}
+
+.modal-box{
+    background-color: var(--color-primary)!important;
+    border-color: var(--color-border);
+    @apply rounded-lg;
+
+    .modal-input{
+        background-color: var(--color-secondary);
+        border-color: var(--color-border);
+        color: var(--color-font);
+    }
+
+    .user-chat{
+        @apply flex gap-2  py-3 px-3 rounded-lg; 
+        &:hover{
+            background-color: var(--color-hover);
+        }
+    }
+}
+

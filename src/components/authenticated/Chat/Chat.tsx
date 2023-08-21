@@ -18,6 +18,7 @@ import { selectOnlineActiveUsers } from '@/app/slices/chat/onlineActiveUserSlice
 import { selectUser } from '@/app/slices/auth/UserSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { BeatLoader } from "react-spinners";
+import { groupByDate } from '../base/Aside/subs/ChatHelper';
 
 interface FriendType {
   name: string,
@@ -57,29 +58,29 @@ const Chat = () => {
     setCurrentChatId(chatId);
     setMessages([]);
     setPage(1);
-    
-    return ()=>{
-      setCurrentChatId(undefined);
-    }
-  },[chatId, currentChatId])
+
+    console.log('chat Id' + chatId + ' reset run',[messages])
+  },[chatId])
 
   const fetchChatList = useCallback(async (pageNum: number) => {
+    setLoading(true);
+
     const url = `user/chats/messages/${chatId}?page=${pageNum}`;
     const res = await getChatData(url, token!)
     //reverse the chat messages
     const reversed = res.data.data.chatMessages.data;
     chatPrefix.current = res.data.data.chat_prefix;
-  
     setLastPage(res.data.data.chatMessages.last_page)
     setMessages((prevMessages) => [...prevMessages, ...reversed]);
     
     setFriend(res.data.data.friend.user)
     setLoading(false);
+    console.log('chat Id' + chatId + ' fetch run',[messages])
 
     return ()=>{
       setMessages([]);
+      setLoading(true)
     }
-
   }, [chatId, currentChatId, token])
   //memorize the icons
   const icons = useMemo(() => {
@@ -92,11 +93,12 @@ const Chat = () => {
   }, [])
   // Usage
   useEffect(() => {
+
     const channelManager = new PresenceEchoManager(channel, token!)
     console.log('channel run ')
     channelManager.presenceSubscribe(
       () => {
-        updateLastMessage(chatId!);
+        updateLastMessage(currentChatId!);
       }
     )
       .joining((user: any) => {
@@ -107,23 +109,33 @@ const Chat = () => {
         console.log(user)
       })
       .listen('.messageReceived', (e: any) => {
-        console.log(e)
+        console.log('from chat' + e)
         setMessages((prev) => [e[0], ...prev])
         reset();
       })
 
-  }, [channel, token, chatId])
+    return () => {
+      channelManager.presenceUnsubscribe();
+    }
+
+
+  }, [channel, token, currentChatId])
 
 
   useEffect(() => {
     console.log('chat Id' + chatId + ' page run',[messages])
     fetchChatList(page)
     setCurrentChatId(chatId !);
-  }, [chatId, token])
+    return () => {
+      setCurrentChatId(undefined);
+    }
+
+  }, [chatId, page, token])
 
 
   const sendMessage = (message: string) => {
-    sendEventMessage(message, user!.id, chatId!, chatPrefix.current)
+   sendEventMessage(message, user!.id, chatId!, chatPrefix.current)
+    
   }
   // scroll to whole bottom
   // useEffect(() => {
@@ -142,13 +154,34 @@ const Chat = () => {
     }
   }, [lastPage, page])
 
+  const groupedMessages = groupByDate(messages);
+
+  const messageElements = Object.keys(groupedMessages)
+  .sort((a, b) =>  b.localeCompare(a))
+  .map((date) => {
+    const messagesForDate = groupedMessages[date];
+    const messageText = messagesForDate.map((message : any) => (
+      <>
+      <MemorizedChatMessageLine key={ `chat_${chatId}` + message.id } message={message} />
+
+      </>
+    ))
+
+     messages
+    return (
+    <>
+    {messageText}
+    <p key={date} className='text-center py-3'>{date}</p>
+    </>);
+  });
+
   return (
-    <div className="chat-bg flex flex-col justify-between transition-all">
+    <div className="chat-bg flex flex-col justify-between transition-all z-10 relative">
 
       <div className="w-full h-[85%] px-12 pt-10 ">
         <div className="h-full flex flex-col gap-4 ">
 
-          <div className="chat-banner h-full w-full flex items-center gap-6">
+          <div className="chat-banner h-full w-full flex items-center gap-6 py-6">
             <div className={`avatar ${isOnline}`}>
               <div className="w-14 mask mask-squircle">
                 <img src={friend?.profile_photo} />
@@ -164,33 +197,26 @@ const Chat = () => {
 
             {/* chat start */}
 
-            {loading ? <p>loadiing</p> :
+            {loading ? <div className="w-full text-center ">
+                  <BeatLoader color='#1c9dea' loading={true} size={10} />
+                </div>:
               <>
+               
                 <InfiniteScroll
                   dataLength={messages.length}
                   next={loadMore}
                   style={{ display: 'flex', flexDirection: 'column-reverse' }}
                   scrollableTarget="chatBody"
-                  hasMore={lastPage >= page}
+                  hasMore={lastPage > page}
                   inverse={true}
-                  loader={lastPage >= page ? (
-                    <div className="w-full text-center ">
-                      <BeatLoader color='blue' loading={true} size={10} />
-                    </div>
-
-                  ) : <div></div>
+                  loader={ (<div className="w-full text-center ">
+                  <BeatLoader color='#1c9dea' loading={true} size={10} />
+                </div>)
                   }>
-                    
-                  {
-                  messages.map((message) => (
-                    <>
-                    <MemorizedChatMessageLine key={ `chat_${chatId}` + message.id } message={message} />
-
-                    </>
-                  ))
-                  }
+                    {
+                      messageElements
+                    }
                 </InfiniteScroll>
-
 
               </>
             }

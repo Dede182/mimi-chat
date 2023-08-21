@@ -13,7 +13,6 @@ export interface ChatListDataType {
 export interface ChatMessageDatatType {
     id: number;
     message: string;
-    is_read: number;
     sender_id: number;
-
+    created_at : string;
 }

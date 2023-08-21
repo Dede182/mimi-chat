@@ -1,24 +1,57 @@
 import { t } from 'i18next'
-import ChatHeadSwiper from './subs/ChatHeadSwiper'
+import ChatHeadSwiper from '../subs/ChatHeadSwiper'
 import { ImSearch } from 'react-icons/im'
 
-import { CastType } from './subs/ChatHeadSwiperItem'
-import { ChatListDataType } from '../../Chat/types/ChatTypes'
-import { useEffect, useState } from 'react'
+import { CastType } from '../subs/ChatHeadSwiperItem'
+import { ChatListDataType } from '../../../Chat/types/ChatTypes'
+import { useCallback, useEffect, useState } from 'react'
 import { getChatData } from '@/api/generals/ChatList'
 import Cookies from 'js-cookie'
-import MemorizedChatLine from './subs/ChatLine'
+import MemorizedChatLine from '../subs/ChatLine'
+import AddChat from './AddChat'
+
 
 const MainAside = () => {
 
   const [chatList, setChatList] = useState<Array<ChatListDataType>>([])
   const token = Cookies.get('token')
+
+  const fetchChatList = useCallback(async () => {
+    const res = await getChatData('user/chats/list',token!)
+    const ordered = res.data.data.sort((a : any,b : any) => {
+  
+      if (a.is_read !== b.is_read) {
+        // Sort unread messages first (unread before read)
+        return a.is_read - b.is_read ;
+      } else if (a.is_read === 0) {
+        // If both messages are unread, sort by created_at in descending order
+        const aCreatedAt = new Date(a.created_at);
+        const bCreatedAt = new Date(b.created_at);
+        return bCreatedAt.getTime() - aCreatedAt.getTime();
+      } else {
+        // If both messages are read, sort by created_at in descending order
+        const aCreatedAt = new Date(a.created_at);
+        const bCreatedAt = new Date(b.created_at);
+        return bCreatedAt.getTime() - aCreatedAt.getTime();
+      }
+    })
+    setChatList(ordered)
+  },[token])
+
   useEffect(() => {
-    const fetchChatList = async () => {
-      const res = await getChatData('user/chats/list',token!)
-      setChatList(res.data.data)
-    }
+    console.log('chat list run')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const handleItemAdded = (event : any) => {
+      fetchChatList()
+
+    };
+
+    window.addEventListener('newChatAdded', handleItemAdded);
     fetchChatList()
+    // Clean up event listener when component unmounts
+    return () => {
+      window.removeEventListener('newChatAdded', handleItemAdded);
+    };
   }, [token])
 
 
@@ -59,7 +92,7 @@ const MainAside = () => {
     ]
   
   return (
-    <div className="animate__animated animate__fadeIn ">
+    <div className="animate__animated animate__fadeIn z-50 relative">
       <div className="flex flex-col  pt-6  gap-4 h-[100vh]">
 
         <div className="recent-header flex flex-col gap-1 px-10">
@@ -86,8 +119,8 @@ const MainAside = () => {
           </div>
 
           <div className="flex justify-between px-10">
-            <div className="chat-cata" data-active="true">{t('chat')}</div>
-            <div className="chat-cata">{t('contacts')}</div>
+            <button className="chat-cata" data-active="true">{t('chat')}</button>
+            <AddChat />
           </div>
 
           <div className="flex flex-col mt-8">

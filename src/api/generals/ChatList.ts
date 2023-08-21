@@ -38,10 +38,7 @@ export const sendEventMessage =async(message: string,user_id: number,chat_id: st
         chat_id : chat_id,
         prefix_id : chatPrefix
       }
-    }).catch((err: any)=>{
-      console.log(err)
     })
-  
    }
 
    export const updateLastMessage =async(chat_id: string)  =>  {
@@ -52,8 +49,28 @@ export const sendEventMessage =async(message: string,user_id: number,chat_id: st
       params : {
         chat_id : chat_id,
       }
-    }).catch((err: any)=>{
-      console.log(err)
-    })
-  
+    }) 
    }
+
+   export const findUsers =async(search: string)  =>  {
+      
+      return await ApiRequest({
+        method: 'post',
+        url: '/user/chats/find/users',
+        params : {
+          search : search,
+        }
+      }) 
+    
+    }
+ export const addUserChat =async(userId: number)  =>  {
+      
+      return await ApiRequest({
+        method: 'post',
+        url: '/user/chats/add/users',
+        params : {
+          user_id : userId,
+        }
+      }) 
+    
+    }

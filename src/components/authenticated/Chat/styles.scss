@@ -23,8 +23,14 @@
 
     .chat-end .chat-bubble{
         background-color: var(--bs-btn-bg);
+        max-width: 20vw;
+        padding-top: 5px;
         color : #fff;
-       
+    }
+    .chat-bubble .messageHour{
+        color: var(--color-font-fade);
+        font-size: 0.7rem;
+        @apply whitespace-nowrap;
     }
 }
 

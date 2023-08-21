@@ -49,7 +49,7 @@ const Sidebar = () => {
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.star} aside={CurrentAside.FAVORITES} />
+                    <MemorizedSidebarItem icon={icons.star} akey="spin" aside={CurrentAside.FAVORITES} />
                 </li>
 
                 <li >
@@ -57,11 +57,11 @@ const Sidebar = () => {
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.setting} aside={CurrentAside.SETTINGS} />
+                    <MemorizedSidebarItem icon={icons.setting} akey="spin" aside={CurrentAside.SETTINGS} />
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.powerOff} akey="move" clickFn={logout} />
+                    <MemorizedSidebarItem icon={icons.powerOff}  akey="move" clickFn={logout} />
                 </li>
             </ul>
         </div>

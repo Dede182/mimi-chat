@@ -7,15 +7,13 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchProfile, selectUser } from '@/app/slices/auth/UserSlice';
 import { useEffect } from 'react';
 import { PresenceEchoManager } from '../Chat/EchoManager/PresenceEchoManager';
-import { addOnlineUser, removeOnlineUser, selectOnlineActiveUsers, setInitialOnlineUsers } from '@/app/slices/chat/onlineActiveUserSlice';
+import { addOnlineUser, removeOnlineUser, setInitialOnlineUsers } from '@/app/slices/chat/onlineActiveUserSlice';
 
 const Layout = () => {
   const dispatch = useAppDispatch();
   const token = useAppSelector(token => token.auth.token);
   const profile = useAppSelector(selectUser);
   const channel = `online.chat.1`
-  const onlineActiveUsers = useAppSelector(selectOnlineActiveUsers);
-
 
   useEffect(() => {
     if (!profile) {

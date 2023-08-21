@@ -19,7 +19,7 @@ const startApp = async () => {
       <I18nextProvider i18n={i18n}>
         <BrowserRouter>
           <Provider store={store}>
-            <FloatSetting />
+            {/* <FloatSetting /> */}
             <App />
           </Provider>
         </BrowserRouter>
