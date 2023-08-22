@@ -1,3 +1,4 @@
+import { ChatListDataType } from "@/components/authenticated/Chat/types/ChatTypes";
 
 export const cutTime = (date: string) => {
     const today = new Date();
@@ -56,7 +57,22 @@ export const groupByDate = (data : any[])  =>
         groupedMessages[formattedDate].push(item);
     })
 
-    
-
     return groupedMessages;
+}
+
+export const sortedByDate = ({a,b} : {a:ChatListDataType , b: ChatListDataType})  => {
+    if (a.is_read !== b.is_read) {
+        // Sort unread messages first (unread before read)
+        return a.is_read - b.is_read ;
+      } else if (a.is_read === 0) {
+        // If both messages are unread, sort by created_at in descending order
+        const aCreatedAt = new Date(a.created_at);
+        const bCreatedAt = new Date(b.created_at);
+        return bCreatedAt.getTime() - aCreatedAt.getTime();
+      } else {
+        // If both messages are read, sort by created_at in descending order
+        const aCreatedAt = new Date(a.created_at);
+        const bCreatedAt = new Date(b.created_at);
+        return bCreatedAt.getTime() - aCreatedAt.getTime();
+      }
 }

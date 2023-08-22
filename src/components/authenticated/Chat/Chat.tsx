@@ -18,7 +18,7 @@ import { selectOnlineActiveUsers } from '@/app/slices/chat/onlineActiveUserSlice
 import { selectUser } from '@/app/slices/auth/UserSlice';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { BeatLoader } from "react-spinners";
-import { groupByDate } from '../base/Aside/subs/ChatHelper';
+import { groupByDate } from '../../../utils/helpers/ChatHelper';
 
 interface FriendType {
   name: string,
@@ -63,8 +63,7 @@ const Chat = () => {
   },[chatId])
 
   const fetchChatList = useCallback(async (pageNum: number) => {
-    setLoading(true);
-
+   
     const url = `user/chats/messages/${chatId}?page=${pageNum}`;
     const res = await getChatData(url, token!)
     //reverse the chat messages
@@ -166,12 +165,12 @@ const Chat = () => {
 
       </>
     ))
-
-     messages
     return (
     <>
     {messageText}
-    <p key={date} className='text-center py-3'>{date}</p>
+    <div key={date} className='date'>
+      <span>{date}</span>
+    </div>
     </>);
   });
 

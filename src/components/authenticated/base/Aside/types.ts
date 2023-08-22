@@ -19,4 +19,16 @@ interface SingleChatInfo {
     profile_photo: string;
     single_chat_infos: SingleChatInfo[];
   }
+
+export interface FavoriteUser {
+    id: number;
+    name: string;
+    email: string;
+    profile_photo: string;
+
+}
   
+export interface FavoriteUserResponse {
+    favorite_id : number;
+    favorite : FavoriteUser;
+}

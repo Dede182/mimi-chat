@@ -1,3 +1,4 @@
+import Cookies  from 'js-cookie';
 import { InternalAxiosRequestConfig, AxiosResponse } from './../../node_modules/axios/index.d';
 import axios from "axios";
 
@@ -14,7 +15,7 @@ export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosR
         parameter
     const path :string = import.meta.env.VITE_SS_URL;
 
-    const userToken = value.token;
+    const userToken = Cookies.get('token') ??  value.token;
 
     axios.interceptors.request.use((config:InternalAxiosRequestConfig ) => {
         config.headers["Content-Type"] = "application/json";

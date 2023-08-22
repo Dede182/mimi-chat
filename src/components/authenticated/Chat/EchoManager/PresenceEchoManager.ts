@@ -16,7 +16,7 @@ export class PresenceEchoManager extends BaseEchoManager{
         
     this.echo!.join(this.channelName)
       .here((data : any) => {
-        console.log('channel in ' + this.channelName , data);
+        // console.log('channel in ' + this.channelName , data);
         if (this.subscribedCallback) {
           this.subscribedCallback(data);
         }

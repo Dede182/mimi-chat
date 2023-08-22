@@ -9,54 +9,61 @@ import { getChatData } from '@/api/generals/ChatList'
 import Cookies from 'js-cookie'
 import MemorizedChatLine from '../subs/ChatLine'
 import AddChat from './AddChat'
+import { sortedByDate } from '@/utils/helpers/ChatHelper'
+import { BeatLoader } from 'react-spinners'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 
 const MainAside = () => {
 
   const [chatList, setChatList] = useState<Array<ChatListDataType>>([])
+  const [page, setPage] = useState<number>(1);
   const token = Cookies.get('token')
+  const [loading, setLoading] = useState<boolean>(false);
+  const [lastPage, setLastPage] = useState<number>(1)
 
-  const fetchChatList = useCallback(async () => {
-    const res = await getChatData('user/chats/list',token!)
-    const ordered = res.data.data.sort((a : any,b : any) => {
-  
-      if (a.is_read !== b.is_read) {
-        // Sort unread messages first (unread before read)
-        return a.is_read - b.is_read ;
-      } else if (a.is_read === 0) {
-        // If both messages are unread, sort by created_at in descending order
-        const aCreatedAt = new Date(a.created_at);
-        const bCreatedAt = new Date(b.created_at);
-        return bCreatedAt.getTime() - aCreatedAt.getTime();
-      } else {
-        // If both messages are read, sort by created_at in descending order
-        const aCreatedAt = new Date(a.created_at);
-        const bCreatedAt = new Date(b.created_at);
-        return bCreatedAt.getTime() - aCreatedAt.getTime();
-      }
+  const fetchChatList = useCallback(async (page: number) => {
+    const res = await getChatData(`user/chats/list?page=${page}`, token!)
+    console.log(res.data.data);
+    const ordered = res.data.data.data.sort((a: ChatListDataType, b: ChatListDataType) => {
+      return sortedByDate({ a, b });
     })
-    setChatList(ordered)
-  },[token])
-
+    setLastPage(res.data.data.last_page)
+    setChatList((prevMessages) => [...prevMessages,...ordered])
+  }, [token])
+  
   useEffect(() => {
     console.log('chat list run')
+    setLoading(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleItemAdded = (event : any) => {
-      fetchChatList()
+    const handleItemAdded = (event: any) => {
+      fetchChatList(page)
 
     };
 
     window.addEventListener('newChatAdded', handleItemAdded);
-    fetchChatList()
+    fetchChatList(page)
+
+    setLoading(false);
     // Clean up event listener when component unmounts
     return () => {
+      setLoading(true);
       window.removeEventListener('newChatAdded', handleItemAdded);
     };
-  }, [token])
+  }, [token,page])
 
+  const loadMore = useCallback(() => {
+    const pageNum = page + 1;
+    if (lastPage >= pageNum) {
+      setPage(pageNum);
+      console.log('loadmore run')
+    } else {
+      return;
+    }
+  }, [lastPage, page])
 
-  const casts : Array<CastType> = 
-   [
+  const casts: Array<CastType> =
+    [
       {
         id: 1,
         name: 'cast 1',
@@ -90,9 +97,10 @@ const MainAside = () => {
         name: 'cast 4',
       },
     ]
-  
+    
+
   return (
-    <div className="animate__animated animate__fadeIn z-50 relative">
+    <div className="animate__animated animate__fadeIn z-50 relative max-w-[30vw]">
       <div className="flex flex-col  pt-6  gap-4 h-[100vh]">
 
         <div className="recent-header flex flex-col gap-1 px-10">
@@ -102,7 +110,7 @@ const MainAside = () => {
 
         <ChatHeadSwiper casts={casts} />
 
-        <div className="chat-section scroll  overflow-auto hover:overflow-y-scroll ">
+        <div id="chatListBody" className="chat-section scroll  overflow-y-scroll ">
           <div className="flex justify-between px-10 mb-4">
             <div className="recent-header flex flex-col gap-1">
               <h3 className="text-2xl font-bold capitalize">{t('chat')}</h3>
@@ -124,10 +132,28 @@ const MainAside = () => {
           </div>
 
           <div className="flex flex-col mt-8">
+            {loading ? <div className="w-full text-center ">
+              <BeatLoader color='#1c9dea' loading={true} size={10} />
+            </div> :
+              <>
 
-            {chatList.map((chat,index) => (
-              <MemorizedChatLine key={chat.chat_id || index} chatline={chat} />
-            ))}      
+                <InfiniteScroll
+                  dataLength={chatList.length}
+                  next={loadMore}
+                  scrollableTarget="chatListBody"
+                  hasMore={lastPage > page}
+                  loader={(<div className="w-full text-center ">
+                    <BeatLoader color='#1c9dea' loading={true} size={10} />
+                  </div>)
+                  }>
+                  {chatList.map((chat, index) => (
+                    <MemorizedChatLine key={chat.chat_id || index} chatline={chat} />
+                  ))}
+                </InfiniteScroll>
+
+              </>
+            }
+
 
           </div>
         </div>

@@ -2,7 +2,7 @@ import {  useAppSelector } from "@/app/hooks"
 import { selectSidebar } from "@/app/slices/sidebarSlice";
 import './style.scss';
 import { CurrentAside } from "./Aside/types";
-import { AiFillSetting, AiFillStar, HiUserGroup, FaPowerOff } from "./SidebarHelper"
+import { AiFillSetting, AiFillStar, HiUserGroup, FaPowerOff } from "@/utils/helpers/SidebarHelper"
 import Cookies from "js-cookie";
 import {  selectUser } from "@/app/slices/auth/UserSlice";
 import { MemorizedSidebarItem } from "./SidebarItem";

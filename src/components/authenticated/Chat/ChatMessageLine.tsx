@@ -3,7 +3,7 @@ import { useAppSelector } from '@/app/hooks'
 import { selectUser } from '@/app/slices/auth/UserSlice';
 import { memo, useMemo } from 'react';
 import { ChatMessageDatatType } from './types/ChatTypes';
-import { toHour } from '../base/Aside/subs/ChatHelper';
+import { toHour } from '../../../utils/helpers/ChatHelper';
 
 // interface InlineChatMessage extends ChatMessageDatatType {
 //   isRead : boolean

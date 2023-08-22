@@ -4,7 +4,7 @@ import { ChatListDataType } from "@/components/authenticated/Chat/types/ChatType
 import { memo, useEffect, useMemo, useState } from "react"
 import { useNavigate, useParams } from "react-router-dom";
 import {BiSolidMessageDetail} from 'react-icons/bi'
-import { cutString, cutTime } from "./ChatHelper";
+import { cutString, cutTime } from "../../../../../utils/helpers/ChatHelper";
 import { PresenceEchoManager } from "@/components/authenticated/Chat/EchoManager/PresenceEchoManager";
 import Cookies from "js-cookie";
 
@@ -104,7 +104,6 @@ const ChatLine = ({ chatline }: { chatline: ChatListDataType }) => {
 
 const IsSameChat = ({chatline : prevProps} : {chatline : ChatListDataType} ,{chatline : nextProps} : {chatline : ChatListDataType}  ) => {
   return Object.keys(prevProps).every((key) => {
-    console.log('here');
     return prevProps[key as keyof ChatListDataType] === nextProps[key as keyof ChatListDataType]
   })
 }
