@@ -91,11 +91,11 @@ const ChatLine = ({ chatline }: { chatline: ChatListDataType }) => {
 
       {/* time */}
       <div className="chat-time w-[20%] flex flex-col gap-1 justify-center">
-        <div className="text-sm">{ 
+        <div className={`text-sm ${isReadText}`}>{ 
         isMe ? lastMessageTime  : readed ? lastMessageTime  :   MemorizedMessageIcon 
        }
           </div>
-        <div className="text-xs">{ senderId === chatline?.user_id ? '' : isRead}</div>
+        <div className="text-xs">{ senderId == chatline?.user_id ? '' : isRead}</div>
       </div>
 
     </div>

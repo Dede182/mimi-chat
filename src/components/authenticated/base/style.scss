@@ -72,7 +72,7 @@
 
 .sidebar-item {
     background-color: var(--color-secondary) ;
-    @apply w-10 h-10 flex items-center justify-center rounded-full;
+    @apply w-10 h-10 flex items-center justify-center rounded-full transition-all;
 
     &:hover {
         background-color: var(--color-tertiary);
@@ -82,6 +82,20 @@
 .sidebar-icon {
     color: var(--color-font);
     font-size: 1rem;
+}
+
+.heartful{
+    background-color: var(--bs-btn-bg);
+    @apply w-10 h-10 flex items-center justify-center rounded-full transition-all;
+
+    &:hover {
+        background-color: #0792fc;
+    }
+
+    .sidebar-icon {
+        color: #fff;
+        font-size: 1rem;
+    }
 }
 
 .chat-cata {
@@ -131,3 +145,21 @@
     }
 }
 
+.dropdown{
+       
+    color: var(--color-font);
+
+    ul{
+    @apply shadow-lg;
+
+    }
+     ul, li {
+        background-color: var(--color-primary);
+    }
+    li,a {
+        &:hover {
+            background-color: var(--color-hover);
+            color: #000;
+        }
+    }
+}

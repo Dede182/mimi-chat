@@ -1,11 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/app/hooks"
-import { changeAside, selectSidebar } from "@/app/slices/sidebarSlice";
+import { selectSidebar } from "@/app/slices/sidebarSlice";
 import { CurrentAside } from "./Aside/types";
-import { lazy, Suspense, useCallback, useMemo } from 'react';
-import {ImCross} from 'react-icons/im'
+import { lazy, Suspense, useMemo, } from 'react';
 import {AiOutlineAppstore} from 'react-icons/ai'
 const Contacts = lazy(() => import('./Aside/Contacts'));
-const Favourite = lazy(() => import('./Aside/Favourite'));
+const Favourite = lazy(() => import('./Aside/favorite/Favourite'));
 const Setting = lazy(() => import('./Aside/Setting'));
 const MainAside = lazy(() => import('./Aside/MainAside/MainAside'));
 import { toggleSidebar } from "@/app/slices/sidebarSlice";
@@ -30,7 +29,7 @@ const Aside = () => {
   const aside = useAppSelector(selectSidebar).aside;
   
   const currentAside = useMemo(()=>renderAside(aside),[aside]);
-  const ImCrossIcon = useMemo(()=>ImCross,[]);
+  
   const AiOutlineAppstoreIcon = useMemo(()=>AiOutlineAppstore,[]);
   const dispatch = useAppDispatch();
 
@@ -38,12 +37,7 @@ const Aside = () => {
     dispatch(toggleSidebar());
   }
 
-  const goDefaultAside = useCallback(
-    () => {
-        dispatch(changeAside(CurrentAside.DEFAULT));
-    },
-    [dispatch]
-  )
+ 
 
   const sidebarToggle = <button className="absolute top-3 right-2 animate__animated animate__fadeIn sidebar-item  w-8 h-8 z-[80]" onClick={()=>toggle()} >
     <span className="sidebar-icon">
@@ -53,15 +47,13 @@ const Aside = () => {
 
   const showCrossButton = aside !== CurrentAside.DEFAULT;
 
-  const asideClass = 'w-[24rem] aside'
+  const asideClass = 'w-[30vw] aside'
   return (
     <Suspense fallback={<div>Loading...</div>}>
       
       <aside  className={`${asideClass} relative hidden md:block`}>
 
-      {showCrossButton ? <button className="absolute top-3 right-2 w-6 h-6 animate__animated animate__fadeIn z-[80]" onClick={()=>goDefaultAside()} >
-        <ImCrossIcon />
-      </button> : sidebarToggle}
+      {showCrossButton ? '' : sidebarToggle}
         {currentAside}
       </aside>
     </Suspense>

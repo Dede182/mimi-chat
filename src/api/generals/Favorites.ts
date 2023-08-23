@@ -8,3 +8,23 @@ export const getFavorites = async (url: string) => {
           })
 
 }
+
+export const postFavorites = async (url: string,data : any,method :string = "delete") => {
+        return await ApiRequest({
+            method: method,
+            url: url,
+            params : data
+          })
+
+}
+
+export const findFavorites = async (url: string,search : any) => {
+  return await ApiRequest({
+      method: 'get',
+      url: url,
+      params : {
+        search : search
+      }
+    })
+
+}

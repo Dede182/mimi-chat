@@ -37,8 +37,8 @@ const MainAside = () => {
     setLoading(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleItemAdded = (event: any) => {
+      setChatList([])
       fetchChatList(page)
-
     };
 
     window.addEventListener('newChatAdded', handleItemAdded);
