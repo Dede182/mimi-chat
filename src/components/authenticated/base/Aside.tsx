@@ -49,7 +49,10 @@ const Aside = () => {
 
   const asideClass = 'w-[30vw] aside'
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={
+    <div className={`${asideClass}`}>
+
+    </div>}>
       
       <aside  className={`${asideClass} relative hidden md:block`}>
 

@@ -16,3 +16,11 @@ export interface ChatMessageDatatType {
     sender_id: number;
     created_at : string;
 }
+
+export interface FriendType {
+    name: string,
+    email: string,
+    profile_photo: string,
+    isActive: boolean,
+  }
+  

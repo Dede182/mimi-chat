@@ -12,7 +12,9 @@ import AddChat from './AddChat'
 import { sortedByDate } from '@/utils/helpers/ChatHelper'
 import { BeatLoader } from 'react-spinners'
 import InfiniteScroll from 'react-infinite-scroll-component'
-
+import { ske } from '@/skeletons/ske'
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const MainAside = () => {
 
@@ -21,19 +23,25 @@ const MainAside = () => {
   const token = Cookies.get('token')
   const [loading, setLoading] = useState<boolean>(false);
   const [lastPage, setLastPage] = useState<number>(1)
-
+  const skes = ske;
   const fetchChatList = useCallback(async (page: number) => {
+
     const res = await getChatData(`user/chats/list?page=${page}`, token!)
-    console.log(res.data.data);
+    const result = res.data.data.data
+    ske.chatCount = result.length > 6 ? 6 : result.length;
+    localStorage.setItem('ske', JSON.stringify(ske));
+
     const ordered = res.data.data.data.sort((a: ChatListDataType, b: ChatListDataType) => {
       return sortedByDate({ a, b });
     })
     setLastPage(res.data.data.last_page)
     setChatList((prevMessages) => [...prevMessages,...ordered])
+
+    setLoading(false);
+
   }, [token])
   
   useEffect(() => {
-    console.log('chat list run')
     setLoading(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleItemAdded = () => {
@@ -44,7 +52,6 @@ const MainAside = () => {
     window.addEventListener('newChatAdded', handleItemAdded);
     fetchChatList(page)
 
-    setLoading(false);
     // Clean up event listener when component unmounts
     return () => {
       setLoading(true);
@@ -132,9 +139,11 @@ const MainAside = () => {
           </div>
 
           <div className="flex flex-col mt-8">
-            {loading ? <div className="w-full text-center ">
-              <BeatLoader color='#1c9dea' loading={true} size={10} />
-            </div> :
+            {loading ? 
+              <div className="flex px-10 gap-8">
+                 <Skeleton width="24vw" height={80} baseColor='#96969613' highlightColor='#6f6e6e13' count={ske.chatCount}/>
+              </div>
+          :
               <>
 
                 <InfiniteScroll

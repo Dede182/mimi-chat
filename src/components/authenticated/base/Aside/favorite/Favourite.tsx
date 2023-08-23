@@ -49,10 +49,10 @@ const Favourite = () => {
   }, []);
 
   return (
-    <div className="animate__animated animate__fadeIn max-w-[30vw] relative  z-[200]">
+    <div className="animate__animated animate__fadeIn  relative  z-[200]">
       <div className="py-5">
 
-        <div className="flex flex-col w-[27vw]">
+        <div className="flex flex-col ">
           <div className="flex justify-between items-center px-10 mb-10">
             <h3 className="text-2xl font-bold capitalize">{t('Favorites')}</h3>
 
