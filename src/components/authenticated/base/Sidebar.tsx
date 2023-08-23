@@ -40,6 +40,7 @@ const Sidebar = () => {
 
     const themeSwitch = ()=>{
         dispatch(changeTheme(theme))
+        localStorage.setItem('theme', theme);
     }
 
     return (

@@ -29,6 +29,11 @@
     }
 }
 
+.spin-full 
+{
+    animation: spin 1s linear infinite; 
+}
+
 .spin {
     &:hover {
         .sidebar-icon {

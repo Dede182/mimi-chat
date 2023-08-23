@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { ApiRequest } from '@/api/ApiRequest';
 
 
@@ -28,3 +29,5 @@ export const findFavorites = async (url: string,search : any) => {
     })
 
 }
+
+export type findFavoritesResponse  = AxiosResponse

@@ -36,7 +36,7 @@ const MainAside = () => {
     console.log('chat list run')
     setLoading(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const handleItemAdded = (event: any) => {
+    const handleItemAdded = () => {
       setChatList([])
       fetchChatList(page)
     };

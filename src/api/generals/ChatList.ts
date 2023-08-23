@@ -52,11 +52,11 @@ export const sendEventMessage =async(message: string,user_id: number,chat_id: st
     }) 
    }
 
-   export const findUsers =async(search: string)  =>  {
+   export const findUsers =async(url:string,search: string)  =>  {
       
       return await ApiRequest({
         method: 'post',
-        url: '/user/chats/find/users',
+        url: url,
         params : {
           search : search,
         }

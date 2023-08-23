@@ -128,7 +128,6 @@ const Chat = () => {
     return () => {
       setCurrentChatId(undefined);
     }
-
   }, [chatId, page, token])
 
 
@@ -160,10 +159,7 @@ const Chat = () => {
   .map((date) => {
     const messagesForDate = groupedMessages[date];
     const messageText = messagesForDate.map((message : any) => (
-      <>
       <MemorizedChatMessageLine key={ `chat_${chatId}` + message.id } message={message} />
-
-      </>
     ))
     return (
     <>
