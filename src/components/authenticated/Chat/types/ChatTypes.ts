@@ -18,6 +18,7 @@ export interface ChatMessageDatatType {
 }
 
 export interface FriendType {
+    id: number;
     name: string,
     email: string,
     profile_photo: string,

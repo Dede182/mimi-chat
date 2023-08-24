@@ -12,9 +12,15 @@ const ChatBtnCircle = ({ icon, clickFn, akey = "spine", type }: CircleProps) => 
 
     akey = akey ? akey : "spin";
     type = type ? type : "button";
+
+    const click  = () => {
+        if(clickFn){
+            clickFn();
+        }
+    }
     return (
         <button type={type} className={`sidebar-item ${akey}`}
-            onClick={() => clickFn}>
+            onClick={click}>
             <span className="sidebar-icon">
                 {icon}
             </span>

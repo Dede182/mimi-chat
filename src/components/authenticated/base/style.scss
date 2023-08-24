@@ -7,7 +7,7 @@
     .sidebar-logo {
         border-bottom-width: 1px;
         border-color: var(--color-border);
-        @apply h-32 w-full ;
+        @apply h-32 w-full flex justify-center items-center;
     }
     ul {
         display: flex;

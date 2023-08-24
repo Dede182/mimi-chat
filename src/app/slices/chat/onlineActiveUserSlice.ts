@@ -16,13 +16,13 @@ export const onlineActiveUserSlice = createSlice({
             state.push(...users)
         },
         addOnlineUser : (state,action) => {
-            console.log(action.payload)
+            console.log('joined' + action.payload)
             const user = action.payload
             //before push check the user already exists on state or not
             state.find((u) => u.id === user.id) ? null : state.push(user)
         },
         removeOnlineUser : (state,action) => {
-            console.log(action.payload)
+            console.log('leave' + action.payload)
             const user = action.payload
             const index = state.findIndex((u) => u.id === user.id)
             index !== -1 ? state.splice(index,1) : null

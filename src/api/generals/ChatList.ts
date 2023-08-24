@@ -42,13 +42,13 @@ export const sendEventMessage =async(message: string,user_id: number,chat_id: st
    }
 
    export const updateLastMessage =async(chat_id: string)  =>  {
-
+    console.log(chat_id)
     return await ApiRequest({
       method: 'put',
       url: '/user/chats/update/lastmessage',
-      params : {
+      params : JSON.stringify({
         chat_id : chat_id,
-      }
+      })
     }) 
    }
 

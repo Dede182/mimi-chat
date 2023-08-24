@@ -9,6 +9,7 @@ import { MemorizedSidebarItem } from "./SidebarItem";
 import { memo, useMemo } from "react";
 import { changeTheme, selectTheme } from "@/app/slices/settingSlices";
 import { ImCross } from 'react-icons/im'
+import LogoSvg from "@/components/svgs/Logo/logo";
 
 const logout = () => {
 
@@ -52,8 +53,8 @@ const Sidebar = () => {
     return (
         <div className={`${sidebarWidth} sidebar gap-12 absolute z-[9999]  md:relative`}>
 
-            <div className=" sidebar-logo">
-                {/* hi */}
+            <div className="sidebar-logo ">
+                <LogoSvg  />
             </div>
 
             <ul className={`${sidebarUl} flex flex-col transition-transform `}>

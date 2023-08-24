@@ -5,7 +5,7 @@ import axios from "axios";
 type ApiRequestBodyType = {
     method : string,
     url : string,
-    params? : object
+    params? : object | string,
     token? : string
 }
 

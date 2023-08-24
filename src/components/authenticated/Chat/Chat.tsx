@@ -1,6 +1,6 @@
 
 import './styles.scss'
-import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill,BiArrowBack } from '@/utils/helpers/SidebarHelper'
+import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill, BiArrowBack } from '@/utils/helpers/SidebarHelper'
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MemorizedChatMessageLine, MemoizedChatBtnCircle, InfiniteScroll } from '@/components/authenticated/Chat/ChatIndex';
@@ -15,8 +15,7 @@ import { BeatLoader } from "react-spinners";
 import { groupByDate } from '@/utils/helpers/ChatHelper';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-
-
+import FileInput from './FileInput';
 
 const Chat = () => {
 
@@ -26,25 +25,42 @@ const Chat = () => {
   const [lastPage, setLastPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [currentChatId, setCurrentChatId] = useState<string>();
+  const [typing, setTyping] = useState<boolean>(false);
   const token = Cookies.get('token');
   const params = useParams();
   const chatId = params['id'];
   const channel = `single.chat.${chatId}`;
   const onlineActiveUserSlice = useAppSelector(selectOnlineActiveUsers);
-  const onlineActiveUser = onlineActiveUserSlice.find((user) => user.name == friend?.name);
+  const onlineActiveUser = onlineActiveUserSlice.find((user) => user.id == friend?.id);
   const isOnline = onlineActiveUser ? 'online' : 'offline';
   const user = useAppSelector(selectUser);
   const chatPrefix = useRef(0);
   const backIcon = useMemo(() => {
     return <BiArrowBack />
   }, [])
-  
+
   const navigate = useNavigate();
+
+  const channelManager = useMemo(() => {
+    return new PresenceEchoManager(channel, token!)
+  }, [channel, token])
+
+  const subscribe = useCallback(() => {
+    return channelManager.presenceSubscribe(
+      () => {
+        if(friend?.id != user!.id){
+          updateLastMessage(chatId!, token!)
+        }
+      }
+    )
+  }, [channelManager, currentChatId]);
 
   const {
     register,
     reset,
     handleSubmit,
+    setValue,
+    getValues,
   } = useForm<any>();
 
   const onSubmit = (data: any) => {
@@ -85,13 +101,7 @@ const Chat = () => {
   }, [])
   // Usage
   useEffect(() => {
-    const channelManager = new PresenceEchoManager(channel, token!)
-    console.log('channel run ')
-    channelManager.presenceSubscribe(
-      () => {
-        updateLastMessage(currentChatId!);
-      }
-    )
+    subscribe()
       .joining((user: any) => {
         console.log(user.name + 'joining');
 
@@ -102,15 +112,38 @@ const Chat = () => {
       .listen('.messageReceived', (e: any) => {
         console.log('from chat' + e)
         setMessages((prev) => [e[0], ...prev])
+        setTyping(false);
         reset();
+      })
+      .listenForWhisper('startTyping', () => {
+        setTyping(true);
+      })
+      .listenForWhisper('stopTyping', () => {
+        setTyping(false);
       })
 
     return () => {
       channelManager.presenceUnsubscribe();
+      setTyping(false);
     }
 
-  }, [channel, token, currentChatId])
+  }, [channel, token, currentChatId, channelManager])
 
+  const isTyping = useCallback(() => {
+    const text = getValues('message');
+    if (text.length > 0) {
+      subscribe()
+        .whisper('startTyping', {
+          name: user!.name,
+        })
+    }
+    else{
+      subscribe()
+        .whisper('stopTyping', {
+          name: user!.name,
+        })
+    }
+  }, [channelManager, getValues, user])
 
   useEffect(() => {
     setLoading(true);
@@ -124,14 +157,7 @@ const Chat = () => {
 
   const sendMessage = (message: string) => {
     sendEventMessage(message, user!.id, chatId!, chatPrefix.current)
-
   }
-  // scroll to whole bottom
-  // useEffect(() => {
-  //   const chatBody = document.querySelector('.chatBody');
-
-  //   chatBody?.scrollTo(0, chatBody.scrollHeight)
-  // }, [messages])
 
   const loadMore = useCallback(() => {
     const pageNum = page + 1;
@@ -152,7 +178,7 @@ const Chat = () => {
 
   const messageElements = Object.keys(groupedMessages)
     .sort((a, b) => b.localeCompare(a))
-    .map((date,index) => {
+    .map((date, index) => {
       const messagesForDate = groupedMessages[date];
       const messageText = messagesForDate.map((message: any) => (
         <MemorizedChatMessageLine key={`chat_${chatId}` + message.id} message={message} />
@@ -166,6 +192,10 @@ const Chat = () => {
         </div>);
     });
 
+  const emojiModal = () => {
+    const text = getValues('message');
+    setValue('message', text + "😀", { shouldDirty: true });
+  }
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all z-10 relative">
@@ -179,9 +209,12 @@ const Chat = () => {
             :
             <div className="chat-banner h-full w-full flex items-center gap-6 py-6 ">
               <button onClick={() => navigate('/aside')} className="sidebar-item  w-10 h-10 z-20 md:hidden"  >
-                    <span >{backIcon}</span>
+                <span >{backIcon}</span>
               </button>
-              <div className={`avatar ${isOnline}`}>
+              <div className={`avatar indicator ${isOnline}`}>
+                {
+                  typing && <span className="indicator-item indicator-bottom badge badge-primary">typing…</span>
+                }
                 <div className="w-14 mask mask-squircle">
                   <img src={friend?.profile_photo} />
                 </div>
@@ -229,8 +262,11 @@ const Chat = () => {
 
           <div className="w-2/6 flex justify-evenly">
             <MemoizedChatBtnCircle icon={icons.sticker} />
-            <MemoizedChatBtnCircle icon={icons.emoji} />
-            <MemoizedChatBtnCircle icon={icons.plus} />
+            <MemoizedChatBtnCircle icon={icons.emoji} clickFn={emojiModal} />
+
+            <FileInput icon={icons.plus} />
+
+
           </div>
 
 
@@ -240,7 +276,9 @@ const Chat = () => {
 
           <input type='text'
             {...register('message')}
-            placeholder='Write your Message' className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" />
+            placeholder='Write your Message'
+            onKeyUp={isTyping}
+            className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" />
 
           <div className="w-1/6">
 

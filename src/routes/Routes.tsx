@@ -5,6 +5,7 @@ import Auth from '../auth/middleware/Auth'
 import GuestLayout from '../components/guest/GuestLayout'
 import { lazy, Suspense, useEffect, useState } from 'react';
 import Layout from '@/components/authenticated/base/Layout'
+import LoadingScreen from './LoadingScreen/LoadingScreen'
 
 const Chat = lazy(()=>import('../components/authenticated/Chat/Chat'))
 const Login = lazy(()=>import('../components/guest/Login'))
@@ -27,9 +28,10 @@ const RoutesComponent = () => {
   }, []);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingScreen /> }>
     <Routes>
-
+      <Route path="/loading" element={<LoadingScreen/>} />
+     
       <Route path="/" element={<GuestLayout/>}>
       
       { RouteFc(routesCollection.login.path, <Auth><Login/></Auth>,true)}
