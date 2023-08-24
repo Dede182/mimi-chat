@@ -37,7 +37,7 @@ const Login = () => {
 
   if(loading == 'successful')
   {
-    navigate('/chat/11')
+    navigate('/aside')
   }
 
   return (

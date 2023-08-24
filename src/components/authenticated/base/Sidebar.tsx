@@ -1,13 +1,14 @@
-import {  useAppDispatch, useAppSelector } from "@/app/hooks"
-import { selectSidebar } from "@/app/slices/sidebarSlice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks"
+import { selectSidebar, toggleSidebar } from "@/app/slices/sidebarSlice";
 import './style.scss';
 import { CurrentAside } from "./Aside/types";
-import { AiFillSetting, AiFillStar, HiUserGroup, FaPowerOff , HiLightBulb } from "@/utils/helpers/SidebarHelper"
+import { AiFillSetting, AiFillStar, HiUserGroup, FaPowerOff, HiLightBulb } from "@/utils/helpers/SidebarHelper"
 import Cookies from "js-cookie";
-import {  selectUser } from "@/app/slices/auth/UserSlice";
+import { selectUser } from "@/app/slices/auth/UserSlice";
 import { MemorizedSidebarItem } from "./SidebarItem";
 import { memo, useMemo } from "react";
 import { changeTheme, selectTheme } from "@/app/slices/settingSlices";
+import { ImCross } from 'react-icons/im'
 
 const logout = () => {
 
@@ -15,14 +16,19 @@ const logout = () => {
     window.location.href = "/login"
 }
 const Sidebar = () => {
-    
+
     const dispatch = useAppDispatch();
+    const AiImCrossIcon = useMemo(() => ImCross, []);
 
     const theme = useAppSelector(selectTheme) == "theme-dark" ? "theme-light" : "theme-dark";
 
     const user = useAppSelector(selectUser);
-   
+
     const sidebar = useAppSelector(selectSidebar);
+
+    const toggle = () => {
+        dispatch(toggleSidebar());
+    }
 
     const sidebarWidth = sidebar.isOpen ? 'w-[min(8rem,10rem)]' : 'w-[0%] ';
     const sidebarUl = sidebar.isOpen ? 'scale-1' : 'scale-0 ';
@@ -30,25 +36,25 @@ const Sidebar = () => {
     //memorize the icon
     const icons = useMemo(() => {
         return {
-            star : <AiFillStar />,
-           contacts: <HiUserGroup />,
-          setting: <AiFillSetting />,
-          powerOff : <FaPowerOff />,
-          light : <HiLightBulb />
+            star: <AiFillStar />,
+            contacts: <HiUserGroup />,
+            setting: <AiFillSetting />,
+            powerOff: <FaPowerOff />,
+            light: <HiLightBulb />
         }
-    },[])
+    }, [])
 
-    const themeSwitch = ()=>{
+    const themeSwitch = () => {
         dispatch(changeTheme(theme))
         localStorage.setItem('theme', theme);
     }
 
     return (
-        <div className={`${sidebarWidth} sidebar gap-12 hidden md:flex`}>
+        <div className={`${sidebarWidth} sidebar gap-12 absolute z-[9999]  md:relative`}>
 
             <div className=" sidebar-logo">
-                hi
-                </div> 
+                {/* hi */}
+            </div>
 
             <ul className={`${sidebarUl} flex flex-col transition-transform `}>
                 <li>
@@ -76,7 +82,15 @@ const Sidebar = () => {
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.powerOff}  akey="move" clickFn={logout} />
+                    <MemorizedSidebarItem icon={icons.powerOff} akey="move" clickFn={logout} />
+                </li>
+
+                <li className="md:hidden">
+                    <button className="animate__animated animate__fadeIn sidebar-item  w-8 h-8 z-[80] " onClick={() => toggle()} >
+                        <span className="sidebar-icon !text-[.8rem]">
+                            <AiImCrossIcon />
+                        </span>
+                    </button>
                 </li>
             </ul>
         </div>

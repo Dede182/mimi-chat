@@ -17,12 +17,10 @@ const ChatLine = ({ chatline }: { chatline: ChatListDataType }) => {
   const onlineActiveUser = onlineActiveUserSlice.find((user) => user.id === chatline?.user_id);
   const isOnline = onlineActiveUser ? 'online' : 'offline';
  
-  const isRead = chatline.is_read ? true : false;
-
   const [chatId] = useState<number>(chatline?.chat_id);
   const currentChat = (parseInt(useParams().id !, 10)) ;
   const [lastMessage,setLastMessage] = useState<string>(chatline?.last_message);
-  const [readed,setReaded] = useState<boolean>(isRead);
+  const [readed,setReaded] = useState<boolean>(!!chatline.is_read);
   const [senderId,setSenderId] = useState<number>(chatline?.sender_id);
   
 
@@ -95,7 +93,7 @@ const ChatLine = ({ chatline }: { chatline: ChatListDataType }) => {
         isMe ? lastMessageTime  : readed ? lastMessageTime  :   MemorizedMessageIcon 
        }
           </div>
-        <div className="text-xs">{ senderId == chatline?.user_id ? '' : isRead}</div>
+        <div className="text-xs">{ senderId == chatline?.user_id ? '' : readed}</div>
       </div>
 
     </div>

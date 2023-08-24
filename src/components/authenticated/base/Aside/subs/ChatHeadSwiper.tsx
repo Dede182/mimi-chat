@@ -19,7 +19,7 @@ const ChatHeadSwiper = ({casts } : CastsProps) => {
       className="flex-1 !mx-2 mySwiper hidden"
       slidesPerView={2}
      
-      spaceBetween={40}
+      spaceBetween={'8rem'}
       pagination={{
         clickable: true,
       }}

@@ -75,19 +75,19 @@ const AddChat = () => {
 
             <input type="checkbox" id="my_modal_7" className="modal-toggle" />
             <div className="modal ">
-                <div className="modal-box scroll !z-[50] relative w-4/6 max-h-[60%]">
-                    <h3 className="text-lg font-bold mb-3 pb-4 bb">Find User</h3>
+                <div className="modal-box scroll !z-[50] relative w-5/6 md:w-4/6 max-h-[60%]">
+                    <h3 className="text-base md:text-lg font-bold mb-3 pb-4 bb">Find User</h3>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-control w-full flex flex-row gap-3">
 
                             <input type="text"
                                 {...register('search')}
-                                placeholder={t('find the user')} className="input modal-input w-full input-bordered" />
+                                placeholder={t('find the user')} className="res-input w-full input-bordered" />
                             <InputError errors={errors} />
                             <button type="submit"
                                 disabled={loading}
-                                className="btn btn-primary" onClick={handleSubmit(onSubmit)}>{t('search')}</button>
+                                className="btn btn-primary btn-sm md:btn-md" onClick={handleSubmit(onSubmit)}>{t('search')}</button>
 
                         </div>
 
@@ -110,7 +110,7 @@ const AddChat = () => {
                     {
                         loading ? null : lastPage <= page ? null : (
                             <button onClick={loadMore} className={`mb-2 mt-4 w-full flex justify-center ${spin}`}>
-                                <span className='text-[1.2rem]'>
+                                <span className='text-[.9rem] md:text-[1.2rem]'>
                                     <AiOutlineReload />
                                 </span>
                             </button>
@@ -163,10 +163,10 @@ const InlineUser = ({ chat }: { chat: SearchedUsers }) => {
             <div className=" w-[20%] flex flex-col gap-1 justify-center">
                 {
                     chat?.has_chat ? <button type="submit" onClick={navigateToChat}
-                        className="btn btn-soft w-20 h-4" >{t('chat')}</button>
+                        className="btn btn-soft btn-sm md:btn-md  w-20 h-4" >{t('chat')}</button>
                         : <button type="submit"
                             onClick={AddUserToChat}
-                            className="btn btn-primary w-20 h-4" >{t('add')}</button>
+                            className="btn btn-sm md:btn-md btn-primary w-20 h-4" >{t('add')}</button>
                 }
             </div>
         </>

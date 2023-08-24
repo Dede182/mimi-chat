@@ -9,7 +9,7 @@ export interface SidebarState {
 }
 
 const initialState = {
-    isOpen: true,
+    isOpen: false,
     aside : CurrentAside.DEFAULT
 };
 

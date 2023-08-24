@@ -54,7 +54,7 @@ const FavoriteLine = ({ favoriteUser }: { favoriteUser: FavoriteUserResponse }) 
                 </div>
 
                 {/* chat */}
-                <div className={`chat-message w-[10vw] overflow-x-hidden flex flex-col gap-1`}>
+                <div className={`chat-message w-[40vw] md:w-[10vw] overflow-x-hidden flex flex-col gap-1`}>
                     <div className={`flex justify-between`}>
                         <div className="capitalize whitespace-nowrap">{name}</div>
                     </div>

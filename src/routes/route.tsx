@@ -1,23 +1,23 @@
 
 import { Route } from 'react-router-dom';
-import Auth from '../auth/middleware/Auth';
-import Guard from '../auth/middleware/Guard';
+// import Auth from '../auth/middleware/Auth';
+// import Guard from '../auth/middleware/Guard';
 import Chat from '../components/authenticated/Chat/Chat'
 import Login from '../components/guest/Login';
 import Register from '../components/guest/Register';
-import { ReactNode } from 'react';
+// import { ReactNode } from 'react';
 
-type RouteGuardParent = typeof Auth  | typeof Guard
+// type RouteGuardParent = typeof Auth  | typeof Guard
 
-const middleware = (guard : RouteGuardParent,children : ReactNode) : ReactNode => {
-    return (guard({children }));
-  }
+// const middleware = (guard : RouteGuardParent,children : ReactNode) : ReactNode => {
+//     return (guard({children }));
+//   }
 
-type RouteGuard  = ReturnType<typeof middleware> 
+// type RouteGuard  = ReturnType<typeof middleware> 
 
 interface Route {
   path: string;
-  element : RouteGuard | RouteGuard[] | ReactNode;
+  // element : RouteGuard | RouteGuard[] | ReactNode;
 }
 
   
@@ -25,15 +25,19 @@ interface Route {
 export const routesCollection : Record<string,Route> = {
     chat:  {
       path: '/chat/:id',
-      element: middleware(Guard, <Chat/>)
+      // element: middleware(Guard, <Chat/>)
+    },
+    aside : {
+      path : '/aside',
+      // element : middleware(Guard,<As)
     },
     login :{
       path: '/login',
-      element : middleware(Auth, <Login/>)
+      // element : middleware(Auth, <Login/>)
     },
     register :{
       path: '/register',
-      element : middleware(Auth, <Login/>)
+      // element : middleware(Auth, <Login/>)
     },
 }
 

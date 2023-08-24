@@ -32,3 +32,5 @@ export interface FavoriteUserResponse {
     favorite_id : number;
     favorite : FavoriteUser;
 }
+
+

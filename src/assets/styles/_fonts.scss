@@ -1,20 +1,20 @@
 @font-face {
-    font-family: 'Montserrat';
-    src: 
-    url('../fonts/Montserrat-Italic.ttf') format('ttf'),
-    url('../fonts/Montserrat-MediumItalic.ttf') format('ttf'),
-    url('../fonts/Montserrat-SemiBoldItalic.ttf') format('ttf'),
-    url('../fonts/Montserrat-ThinItalic.ttf') format('ttf'),
-  }
-  
-  @font-face {
-    font-family: 'Roboto';
-    src: url('../fonts/Roboto-BlackItalic.ttf') format('ttf'),
-    url('../fonts/Roboto-BoldItalic.ttf') format('ttf'),
-    url('../fonts/Roboto-LightItalic.ttf') format('ttf'),
-    url('../fonts/Roboto-MediumItalic.ttf') format('ttf'),
-    
-  }
+  font-family: 'Montserrat';
+  src: 
+  url('../fonts/Montserrat-Italic.ttf') format('ttf'),
+  url('../fonts/Montserrat-MediumItalic.ttf') format('ttf'),
+  url('../fonts/Montserrat-SemiBoldItalic.ttf') format('ttf'),
+  url('../fonts/Montserrat-ThinItalic.ttf') format('ttf');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('../fonts/Roboto-BlackItalic.ttf') format('ttf'),
+  url('../fonts/Roboto-BoldItalic.ttf') format('ttf'),
+  url('../fonts/Roboto-LightItalic.ttf') format('ttf'),
+  url('../fonts/Roboto-MediumItalic.ttf') format('ttf');
+}
+
   
   // family
   $font-primary: 'Montserrat', sans-serif;

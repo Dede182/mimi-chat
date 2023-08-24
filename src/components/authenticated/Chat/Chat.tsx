@@ -1,19 +1,16 @@
 
 import './styles.scss'
-import {LuSticker,HiPlus,BsEmojiLaughing,BsFillSendFill} from '@/utils/helpers/SidebarHelper'
-import { MemoizedChatBtnCircle } from './ChatBtnCircle';
+import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill,BiArrowBack } from '@/utils/helpers/SidebarHelper'
 import { useForm } from 'react-hook-form';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import MemorizedChatMessageLine from './ChatMessageLine';
+import { MemorizedChatMessageLine, MemoizedChatBtnCircle, InfiniteScroll } from '@/components/authenticated/Chat/ChatIndex';
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ChatMessageDatatType, FriendType } from './types/ChatTypes';
 import { getChatData, sendEventMessage, updateLastMessage } from '@/api/generals/ChatList';
 import { useAppSelector } from '@/app/hooks';
-import { selectOnlineActiveUsers } from '@/app/slices/chat/onlineActiveUserSlice';
-import { selectUser } from '@/app/slices/auth/UserSlice';
-import InfiniteScroll from 'react-infinite-scroll-component';
+import { selectUser, selectOnlineActiveUsers } from '@/app/slices/slices';
 import { BeatLoader } from "react-spinners";
 import { groupByDate } from '@/utils/helpers/ChatHelper';
 import Skeleton from 'react-loading-skeleton'
@@ -38,6 +35,12 @@ const Chat = () => {
   const isOnline = onlineActiveUser ? 'online' : 'offline';
   const user = useAppSelector(selectUser);
   const chatPrefix = useRef(0);
+  const backIcon = useMemo(() => {
+    return <BiArrowBack />
+  }, [])
+  
+  const navigate = useNavigate();
+
   const {
     register,
     reset,
@@ -52,8 +55,6 @@ const Chat = () => {
     setCurrentChatId(chatId);
     setMessages([]);
     setPage(1);
-
-    console.log('chat Id' + chatId + ' reset run', [messages])
   }, [chatId])
 
   const fetchChatList = useCallback(async (pageNum: number) => {
@@ -113,12 +114,12 @@ const Chat = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetchChatList(page)
+    fetchChatList(1)
     setCurrentChatId(chatId!);
     return () => {
       setCurrentChatId(undefined);
     }
-  }, [chatId, page, token])
+  }, [chatId, token])
 
 
   const sendMessage = (message: string) => {
@@ -136,54 +137,62 @@ const Chat = () => {
     const pageNum = page + 1;
     if (lastPage >= pageNum) {
       setPage(pageNum);
-      console.log('b run')
+      fetchChatList(pageNum);
     } else {
       return;
     }
+
+    return () => {
+      setPage(1);
+    }
+
   }, [lastPage, page])
 
   const groupedMessages = groupByDate(messages);
 
   const messageElements = Object.keys(groupedMessages)
     .sort((a, b) => b.localeCompare(a))
-    .map((date) => {
+    .map((date,index) => {
       const messagesForDate = groupedMessages[date];
       const messageText = messagesForDate.map((message: any) => (
         <MemorizedChatMessageLine key={`chat_${chatId}` + message.id} message={message} />
       ))
       return (
-        <>
+        <div key={index} className='flex flex-col-reverse'>
           {messageText}
           <div key={date} className='date'>
             <span>{date}</span>
           </div>
-        </>);
+        </div>);
     });
 
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all z-10 relative">
 
-      <div className="w-full h-[85%] px-12 pt-10 ">
+      <div className="w-full h-[85%] md:px-12 md:pt-10 ">
         <div className="h-full flex flex-col gap-4 ">
-         {loading ? 
-         <div>
-          <Skeleton width={"100%"} height={"6rem"}  baseColor='#b2aeae33' highlightColor='#6f6e6e13'  />
-         </div>
-         :
-         <div className="chat-banner h-full w-full flex items-center gap-6 py-6">
-         <div className={`avatar ${isOnline}`}>
-           <div className="w-14 mask mask-squircle">
-             <img src={friend?.profile_photo} />
-           </div>
-         </div>
-         <div className="flex flex-col gap-1">
-           <h1 className="text-lg font-bold">{friend?.name}</h1>
-           <p className="text-sm fade-text">{friend?.email}</p>
-         </div>
-       </div>}
+          {loading ?
+            <div>
+              <Skeleton width={"100%"} height={"6rem"} baseColor='#b2aeae33' highlightColor='#6f6e6e13' />
+            </div>
+            :
+            <div className="chat-banner h-full w-full flex items-center gap-6 py-6 ">
+              <button onClick={() => navigate('/aside')} className="sidebar-item  w-10 h-10 z-20 md:hidden"  >
+                    <span >{backIcon}</span>
+              </button>
+              <div className={`avatar ${isOnline}`}>
+                <div className="w-14 mask mask-squircle">
+                  <img src={friend?.profile_photo} />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h1 className="text-lg font-bold">{friend?.name}</h1>
+                <p className="text-sm fade-text">{friend?.email}</p>
+              </div>
+            </div>}
 
-          <div id="chatBody" className="chatBody flex flex-col-reverse scroll h-[100vh] overflow-y-scroll ">
+          <div id="chatBody" className="chatBody flex flex-col-reverse scroll h-[100vh] overflow-y-scroll px-7 md:px-0 pb-8 md:pb-0">
 
             {/* chat start */}
 
@@ -214,7 +223,7 @@ const Chat = () => {
         </div>
       </div>
 
-      <div className="chat-input w-full h-[10%] ">
+      <div className="chat-input w-full h-[10%] fixed bottom-0 md:relative ">
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-evenly  h-full gap-2">
 

@@ -95,7 +95,7 @@ const AddFavorite = () => {
 
             <input type="checkbox" id="my_modal_8" className="modal-toggle" />
             <div className="modal ">
-                <div className="modal-box scroll !z-[100] relative w-4/6 max-h-[60%]">
+                <div className="modal-box scroll !z-[100] relative  w-5/6 md:w-4/6  max-h-[60%]">
                     <h3 className="text-lg font-bold mb-3 pb-4 bb capitalize">{t('add chat to favorite')}</h3>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,11 +103,11 @@ const AddFavorite = () => {
 
                             <input type="text"
                                 {...register('search')}
-                                placeholder={t('find the user')} className="input modal-input w-full input-bordered" />
+                                placeholder={t('find the user')} className="res-input w-full input-bordered" />
 
                             <button type="submit"
 
-                                className="btn btn-primary">{t('search')}</button>
+                                className="btn btn-primary btn-sm md:btn-md">{t('search')}</button>
 
                         </div>
 

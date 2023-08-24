@@ -39,7 +39,7 @@ const Aside = () => {
 
  
 
-  const sidebarToggle = <button className="absolute top-3 right-2 animate__animated animate__fadeIn sidebar-item  w-8 h-8 z-[80]" onClick={()=>toggle()} >
+  const sidebarToggle = <button className="absolute top-4 md:top-3 right-5 md:right-2 animate__animated animate__fadeIn sidebar-item  w-8 h-8 z-[80]" onClick={()=>toggle()} >
     <span className="sidebar-icon">
     <AiOutlineAppstoreIcon />
       </span>
@@ -47,14 +47,14 @@ const Aside = () => {
 
   const showCrossButton = aside !== CurrentAside.DEFAULT;
 
-  const asideClass = 'w-[30vw] aside'
+  const asideClass = 'w-full md:w-[30vw] aside'
   return (
     <Suspense fallback={
     <div className={`${asideClass}`}>
 
     </div>}>
       
-      <aside  className={`${asideClass} relative hidden md:block`}>
+      <aside  className={`${asideClass} relative `}>
 
       {showCrossButton ? '' : sidebarToggle}
         {currentAside}

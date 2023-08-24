@@ -23,7 +23,6 @@ const MainAside = () => {
   const token = Cookies.get('token')
   const [loading, setLoading] = useState<boolean>(false);
   const [lastPage, setLastPage] = useState<number>(1)
-  const skes = ske;
   const fetchChatList = useCallback(async (page: number) => {
 
     const res = await getChatData(`user/chats/list?page=${page}`, token!)
@@ -107,8 +106,8 @@ const MainAside = () => {
     
 
   return (
-    <div className="animate__animated animate__fadeIn z-50 relative max-w-[30vw]">
-      <div className="flex flex-col  pt-6  gap-4 h-[100vh]">
+    <div className="animate__animated animate__fadeIn z-50 relative w-full md:max-w-[30vw]">
+      <div className="flex flex-col  pt-6  gap-4 max-h-[100vh]">
 
         <div className="recent-header flex flex-col gap-1 px-10">
           <h3 className="text-3xl font-bold capitalize">{t('recent')}</h3>
@@ -141,7 +140,7 @@ const MainAside = () => {
           <div className="flex flex-col mt-8">
             {loading ? 
               <div className="flex px-10 gap-8">
-                 <Skeleton width="24vw" height={80} baseColor='#96969613' highlightColor='#6f6e6e13' count={ske.chatCount}/>
+                 <Skeleton  height={80} baseColor='#96969613' className='w-[80vw] md:w-[24vw]' highlightColor='#6f6e6e13' count={ske.chatCount}/>
               </div>
           :
               <>
