@@ -8,7 +8,7 @@ export class PresenceEchoManager extends BaseEchoManager{
     super(token);
     this.channelName = channelName;
     this.setupEcho();
-
+     this.presenceSubscribe();
   }
 
   presenceSubscribe(subscribedCallback?: (props:any) => void)  {
