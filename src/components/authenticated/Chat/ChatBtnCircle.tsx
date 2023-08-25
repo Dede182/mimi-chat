@@ -5,21 +5,22 @@ type CircleProps = {
     icon: JSX.Element,
     clickFn?: () => void,
     akey?: string,
-    type?: "button" | "submit" | "reset" | undefined
+    type?: "button" | "submit" | "reset" | undefined,
+    loading? : boolean
 
 }
-const ChatBtnCircle = ({ icon, clickFn, akey = "spine", type }: CircleProps) => {
+const ChatBtnCircle = ({ icon, clickFn, akey = "spine", type ,loading  }: CircleProps) => {
 
     akey = akey ? akey : "spin";
     type = type ? type : "button";
-
+    loading = loading ? loading : false;
     const click  = () => {
         if(clickFn){
             clickFn();
         }
     }
     return (
-        <button type={type} className={`sidebar-item ${akey}`}
+        <button type={type} className={`sidebar-item ${akey}`} disabled={loading ? true : false}
             onClick={click}>
             <span className="sidebar-icon">
                 {icon}

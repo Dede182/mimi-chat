@@ -17,6 +17,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import FileInput from './FileInput';
 import { AuthUser } from '@/@types/users';
+import { debounce } from "lodash"
 
 type FormValues = {
   message: string
@@ -71,9 +72,22 @@ const Chat = () => {
     getValues,
   } = useForm<FormValues>();
 
-  const onSubmit = (data: any) => {
-    sendMessage(data.message)
-  }
+  const onSubmit = useCallback(
+    (data: any) => {
+     
+          sendEventMessage(data.message, user!.id, chatId!, chatPrefix.current);
+      
+    },
+    [user, chatId, chatPrefix]
+  );
+
+ 
+
+  const formSubmit = useCallback(() => {
+      formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+  }, [formRef]);
+
+  const handleClick = useCallback(()=> debounce(formSubmit, 200)(), [formSubmit]);
 
   useEffect(() => {
     setCurrentChatId(chatId);
@@ -92,10 +106,9 @@ const Chat = () => {
     setMessages((prevMessages) => [...prevMessages, ...reversed]);
     setFriend(res.data.data.friend.user)
     setLoading(false);
-
     return () => {
       setMessages([]);
-      setLoading(true)
+      setLoading(true);
     }
   }, [chatId, currentChatId, token])
   //memorize the icons
@@ -162,10 +175,6 @@ const Chat = () => {
     }
   }, [chatId, token])
 
-
-  const sendMessage = (message: string) => {
-    sendEventMessage(message, user!.id, chatId!, chatPrefix.current)
-  }
 
   const loadMore = useCallback(() => {
     const pageNum = page + 1;
@@ -297,7 +306,7 @@ const Chat = () => {
 
           <div className="w-1/6">
 
-            <MemoizedChatBtnCircle type='submit' icon={icons.send} />
+            <MemoizedChatBtnCircle type='button' clickFn={handleClick} icon={icons.send} loading={loading} />
 
           </div>
 

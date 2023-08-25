@@ -7,6 +7,7 @@ import { fetchProfile, selectUser } from '@/app/slices/auth/UserSlice';
 import { Suspense, lazy, useEffect, useState } from 'react';
 import { PresenceEchoManager } from '../Chat/EchoManager/PresenceEchoManager';
 import { addOnlineUser, removeOnlineUser, setInitialOnlineUsers } from '@/app/slices/chat/onlineActiveUserSlice';
+import LoadingScreen from '@/routes/LoadingScreen/LoadingScreen';
 const Aside = lazy(() => import('./Aside'));
 
 const Layout = () => {
@@ -61,7 +62,7 @@ const Layout = () => {
       
       {windowWidth > 768 && <Aside/>}
 
-      <Suspense fallback={<div>Loading Outlet...</div>}>
+      <Suspense fallback={<LoadingScreen />}>
         <Outlet />
       </Suspense>
     </div>
