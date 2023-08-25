@@ -84,7 +84,7 @@ const ChatLine = ({ chatline }: { chatline: ChatListDataType }) => {
         <div className={`flex justify-between`}>
           <div className="capitalize">{chatline?.name}</div>
         </div>
-        <div className={`text-sm ` + readed ? '' : 'font-bold text-white'}>{whoSendMessage}</div>
+        <div className={`text-sm ` + (readed) ? '' : 'font-bold text-white'}>{whoSendMessage}</div>
       </div>
 
       {/* time */}

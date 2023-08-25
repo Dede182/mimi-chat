@@ -25,6 +25,10 @@ export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosR
         {
         config.headers['Authorization'] = `Bearer ${userToken}`;   
         }
+        if(value.method === "post")
+        {
+            config.headers['Content-Type'] = 'multipart/form-data';
+        }
         return config;
     });
 
@@ -34,6 +38,7 @@ export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosR
         value.method === "put" ||
         value.method === "delete"
     ) {
+     
         parameter = {
             baseURL: path,
             method: value.method,

@@ -2,7 +2,7 @@
 import './styles.scss'
 import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill, BiArrowBack } from '@/utils/helpers/SidebarHelper'
 import { useForm } from 'react-hook-form';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MemorizedChatMessageLine, MemoizedChatBtnCircle, InfiniteScroll } from '@/components/authenticated/Chat/ChatIndex';
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
@@ -16,7 +16,11 @@ import { groupByDate } from '@/utils/helpers/ChatHelper';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import FileInput from './FileInput';
+import { AuthUser } from '@/@types/users';
 
+type FormValues = {
+  message: string
+}
 const Chat = () => {
 
   const [messages, setMessages] = useState<ChatMessageDatatType[]>([]);
@@ -33,8 +37,12 @@ const Chat = () => {
   const onlineActiveUserSlice = useAppSelector(selectOnlineActiveUsers);
   const onlineActiveUser = onlineActiveUserSlice.find((user) => user.id == friend?.id);
   const isOnline = onlineActiveUser ? 'online' : 'offline';
-  const user = useAppSelector(selectUser);
-  const chatPrefix = useRef(0);
+  const user = useAppSelector<AuthUser | null>(selectUser);
+  const chatPrefix = useRef<number>(0);
+  const textArea = createRef<HTMLTextAreaElement>();
+
+  const formRef = createRef<HTMLFormElement>();
+
   const backIcon = useMemo(() => {
     return <BiArrowBack />
   }, [])
@@ -48,12 +56,12 @@ const Chat = () => {
   const subscribe = useCallback(() => {
     return channelManager.presenceSubscribe(
       () => {
-        if(friend?.id != user!.id){
-          updateLastMessage(chatId!, token!)
+        if(user &&(friend?.id != user!.id)){
+          updateLastMessage(chatId!)
         }
       }
     )
-  }, [channelManager, currentChatId]);
+  }, [channelManager, chatId, friend?.id, user]);
 
   const {
     register,
@@ -61,7 +69,7 @@ const Chat = () => {
     handleSubmit,
     setValue,
     getValues,
-  } = useForm<any>();
+  } = useForm<FormValues>();
 
   const onSubmit = (data: any) => {
     sendMessage(data.message)
@@ -110,7 +118,7 @@ const Chat = () => {
         console.log(user)
       })
       .listen('.messageReceived', (e: any) => {
-        console.log('from chat' + e)
+        console.log('message receieved from chat' + e)
         setMessages((prev) => [e[0], ...prev])
         setTyping(false);
         reset();
@@ -127,7 +135,7 @@ const Chat = () => {
       setTyping(false);
     }
 
-  }, [channel, token, currentChatId, channelManager])
+  }, [channel, token, channelManager])
 
   const isTyping = useCallback(() => {
     const text = getValues('message');
@@ -192,13 +200,23 @@ const Chat = () => {
         </div>);
     });
 
-  const emojiModal = () => {
-    const text = getValues('message');
-    setValue('message', text + "😀", { shouldDirty: true });
-  }
+    const emojiModal = () => {
+      const text = getValues('message');
+      const cursorPosition = textArea.current?.selectionStart;
+      const newText = text.slice(0, cursorPosition) + "😀" + text.slice(cursorPosition) ;
+      setValue('message', newText, { shouldDirty: true });
+    };
+
+
+  const handleTextareaKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && event.shiftKey) {
+      event.preventDefault(); // Prevent newline
+      formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+    }
+  };
 
   return (
-    <div className="chat-bg flex flex-col justify-between transition-all z-10 relative">
+    <div className="chat-bg flex flex-col justify-between transition-all ">
 
       <div className="w-full h-[85%] md:px-12 md:pt-10 ">
         <div className="h-full flex flex-col gap-4 ">
@@ -258,7 +276,7 @@ const Chat = () => {
 
       <div className="chat-input w-full h-[10%] fixed bottom-0 md:relative ">
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-evenly  h-full gap-2">
+        <form   ref={formRef}  onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-evenly  h-full gap-2">
 
           <div className="w-2/6 flex justify-evenly">
             <MemoizedChatBtnCircle icon={icons.sticker} />
@@ -269,16 +287,13 @@ const Chat = () => {
 
           </div>
 
-
-          {/* <textarea
-            {...register('message')}
-            placeholder='Write your Message' className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" ></textarea> */}
-
-          <input type='text'
+          <textarea
             {...register('message')}
             placeholder='Write your Message'
             onKeyUp={isTyping}
-            className="w-3/6 resize-none scroll pb-0 rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4" />
+            // ref={textArea}
+            onKeyDown={handleTextareaKeyDown}
+            className="w-3/6 resize-none scroll pt-5 break-words rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4"></textarea>
 
           <div className="w-1/6">
 

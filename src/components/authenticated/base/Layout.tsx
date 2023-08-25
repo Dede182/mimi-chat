@@ -4,7 +4,7 @@ import '@/index.scss'
 import './style.scss';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchProfile, selectUser } from '@/app/slices/auth/UserSlice';
-import { lazy, useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import { PresenceEchoManager } from '../Chat/EchoManager/PresenceEchoManager';
 import { addOnlineUser, removeOnlineUser, setInitialOnlineUsers } from '@/app/slices/chat/onlineActiveUserSlice';
 const Aside = lazy(() => import('./Aside'));
@@ -60,7 +60,10 @@ const Layout = () => {
       <MemoSidebar />
       
       {windowWidth > 768 && <Aside/>}
-      <Outlet />
+
+      <Suspense fallback={<div>Loading Outlet...</div>}>
+        <Outlet />
+      </Suspense>
     </div>
   )
 }

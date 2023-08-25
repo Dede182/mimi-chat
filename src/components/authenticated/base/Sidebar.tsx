@@ -6,7 +6,7 @@ import { AiFillSetting, AiFillStar, HiUserGroup, FaPowerOff, HiLightBulb } from 
 import Cookies from "js-cookie";
 import { selectUser } from "@/app/slices/auth/UserSlice";
 import { MemorizedSidebarItem } from "./SidebarItem";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { changeTheme, selectTheme } from "@/app/slices/settingSlices";
 import { ImCross } from 'react-icons/im'
 import LogoSvg from "@/components/svgs/Logo/logo";
@@ -27,9 +27,9 @@ const Sidebar = () => {
 
     const sidebar = useAppSelector(selectSidebar);
 
-    const toggle = () => {
-        dispatch(toggleSidebar());
-    }
+    const toggle = useCallback(() => {
+            dispatch(toggleSidebar());
+    }, [dispatch])
 
     const sidebarWidth = sidebar.isOpen ? 'w-[min(8rem,10rem)]' : 'w-[0%] ';
     const sidebarUl = sidebar.isOpen ? 'scale-1' : 'scale-0 ';
@@ -41,20 +41,21 @@ const Sidebar = () => {
             contacts: <HiUserGroup />,
             setting: <AiFillSetting />,
             powerOff: <FaPowerOff />,
-            light: <HiLightBulb />
+            light: <HiLightBulb />,
+            logo : <LogoSvg /> 
         }
     }, [])
 
-    const themeSwitch = () => {
-        dispatch(changeTheme(theme))
-        localStorage.setItem('theme', theme);
-    }
-
+    const themeSwitch = useCallback(()=>{
+            dispatch(changeTheme(theme))
+            localStorage.setItem('theme', theme);
+    
+    },[dispatch,theme])
     return (
         <div className={`${sidebarWidth} sidebar gap-12 absolute z-[9999]  md:relative`}>
 
             <div className="sidebar-logo ">
-                <LogoSvg  />
+                {icons.logo}
             </div>
 
             <ul className={`${sidebarUl} flex flex-col transition-transform `}>
