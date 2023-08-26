@@ -1,27 +1,23 @@
 
 import './styles.scss'
-import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill, BiArrowBack } from '@/utils/helpers/SidebarHelper'
-import { useForm } from 'react-hook-form';
-import { createRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MemorizedChatMessageLine, MemoizedChatBtnCircle, InfiniteScroll } from '@/components/authenticated/Chat/ChatIndex';
+import { BiArrowBack } from '@/utils/helpers/SidebarHelper'
+import {  useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MemorizedChatMessageLine, InfiniteScroll } from '@/components/authenticated/Chat/ChatIndex';
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ChatMessageDatatType, FriendType } from './types/ChatTypes';
-import { getChatData, sendEventMessage, updateLastMessage } from '@/api/generals/ChatList';
+import { getChatData, updateLastMessage } from '@/api/generals/ChatList';
 import { useAppSelector } from '@/app/hooks';
 import { selectUser, selectOnlineActiveUsers } from '@/app/slices/slices';
 import { BeatLoader } from "react-spinners";
 import { groupByDate } from '@/utils/helpers/ChatHelper';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import FileInput from './FileInput';
 import { AuthUser } from '@/@types/users';
-import { debounce } from "lodash"
+import ChatSendMessage from './ChatSendMessage';
 
-type FormValues = {
-  message: string
-}
+
 const Chat = () => {
 
   const [messages, setMessages] = useState<ChatMessageDatatType[]>([]);
@@ -40,10 +36,7 @@ const Chat = () => {
   const isOnline = onlineActiveUser ? 'online' : 'offline';
   const user = useAppSelector<AuthUser | null>(selectUser);
   const chatPrefix = useRef<number>(0);
-  const textArea = createRef<HTMLTextAreaElement>();
-
-  const formRef = createRef<HTMLFormElement>();
-
+ 
   const backIcon = useMemo(() => {
     return <BiArrowBack />
   }, [])
@@ -64,36 +57,17 @@ const Chat = () => {
     )
   }, [channelManager, chatId, friend?.id, user]);
 
-  const {
-    register,
-    reset,
-    handleSubmit,
-    setValue,
-    getValues,
-  } = useForm<FormValues>();
-
-  const onSubmit = useCallback(
-    (data: any) => {
-     
-          sendEventMessage(data.message, user!.id, chatId!, chatPrefix.current);
-      
-    },
-    [user, chatId, chatPrefix]
-  );
-
- 
-
-  const formSubmit = useCallback(() => {
-      formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-  }, [formRef]);
-
-  const handleClick = useCallback(()=> debounce(formSubmit, 200)(), [formSubmit]);
-
   useEffect(() => {
-    setCurrentChatId(chatId);
+    setLoading(true);
     setMessages([]);
     setPage(1);
-  }, [chatId])
+    fetchChatList(1)
+    setCurrentChatId(chatId!);
+    return () => {
+      setMessages([]);
+      setCurrentChatId(undefined);
+    }
+  }, [chatId, token])
 
   const fetchChatList = useCallback(async (pageNum: number) => {
 
@@ -112,14 +86,7 @@ const Chat = () => {
     }
   }, [chatId, currentChatId, token])
   //memorize the icons
-  const icons = useMemo(() => {
-    return {
-      sticker: <LuSticker />,
-      emoji: <BsEmojiLaughing />,
-      plus: <HiPlus />,
-      send: <BsFillSendFill />
-    }
-  }, [])
+ 
   // Usage
   useEffect(() => {
     subscribe()
@@ -131,10 +98,9 @@ const Chat = () => {
         console.log(user)
       })
       .listen('.messageReceived', (e: any) => {
-        console.log('message receieved from chat' + e)
+        console.log('message receieved from chat', e)
         setMessages((prev) => [e[0], ...prev])
         setTyping(false);
-        reset();
       })
       .listenForWhisper('startTyping', () => {
         setTyping(true);
@@ -149,32 +115,6 @@ const Chat = () => {
     }
 
   }, [channel, token, channelManager])
-
-  const isTyping = useCallback(() => {
-    const text = getValues('message');
-    if (text.length > 0) {
-      subscribe()
-        .whisper('startTyping', {
-          name: user!.name,
-        })
-    }
-    else{
-      subscribe()
-        .whisper('stopTyping', {
-          name: user!.name,
-        })
-    }
-  }, [channelManager, getValues, user])
-
-  useEffect(() => {
-    setLoading(true);
-    fetchChatList(1)
-    setCurrentChatId(chatId!);
-    return () => {
-      setCurrentChatId(undefined);
-    }
-  }, [chatId, token])
-
 
   const loadMore = useCallback(() => {
     const pageNum = page + 1;
@@ -208,21 +148,6 @@ const Chat = () => {
           </div>
         </div>);
     });
-
-    const emojiModal = () => {
-      const text = getValues('message');
-      const cursorPosition = textArea.current?.selectionStart;
-      const newText = text.slice(0, cursorPosition) + "😀" + text.slice(cursorPosition) ;
-      setValue('message', newText, { shouldDirty: true });
-    };
-
-
-  const handleTextareaKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && event.shiftKey) {
-      event.preventDefault(); // Prevent newline
-      formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-    }
-  };
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all ">
@@ -283,36 +208,7 @@ const Chat = () => {
         </div>
       </div>
 
-      <div className="chat-input w-full h-[10%] fixed bottom-0 md:relative ">
-
-        <form   ref={formRef}  onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-evenly  h-full gap-2">
-
-          <div className="w-2/6 flex justify-evenly">
-            <MemoizedChatBtnCircle icon={icons.sticker} />
-            <MemoizedChatBtnCircle icon={icons.emoji} clickFn={emojiModal} />
-
-            <FileInput icon={icons.plus} />
-
-
-          </div>
-
-          <textarea
-            {...register('message')}
-            placeholder='Write your Message'
-            onKeyUp={isTyping}
-            // ref={textArea}
-            onKeyDown={handleTextareaKeyDown}
-            className="w-3/6 resize-none scroll pt-5 break-words rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4"></textarea>
-
-          <div className="w-1/6">
-
-            <MemoizedChatBtnCircle type='button' clickFn={handleClick} icon={icons.send} loading={loading} />
-
-          </div>
-
-        </form>
-
-      </div>
+            <ChatSendMessage chatPrefix={chatPrefix} channelManager={channelManager} chatId={chatId} user={user} subscribe={subscribe} />
     </div>
   )
 }

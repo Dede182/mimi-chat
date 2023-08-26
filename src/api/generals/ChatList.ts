@@ -27,7 +27,7 @@ export const getChatData = async (url: string, token: string) => {
     }
 }
 
-export const sendEventMessage =async(message: string,user_id: number,chat_id: string,chatPrefix :number)  =>  {
+export const sendEventMessage =async(message: string,user_id: number,chat_id: string,chatPrefix :number,type : string)  =>  {
 
     return await ApiRequest({
       method: 'post',
@@ -36,7 +36,8 @@ export const sendEventMessage =async(message: string,user_id: number,chat_id: st
         message : message,
         sender_id : user_id,
         chat_id : chat_id,
-        prefix_id : chatPrefix
+        prefix_id : chatPrefix,
+        message_type : type
       }
     })
    }

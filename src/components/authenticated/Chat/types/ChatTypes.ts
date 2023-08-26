@@ -10,11 +10,17 @@ export interface ChatListDataType {
     created_at: string;
 }
 
+export interface FilePath{
+    preview : string,
+    hd : string,
+}
 export interface ChatMessageDatatType {
     id: number;
     message: string;
     sender_id: number;
     created_at : string;
+    message_type : string;
+    file_path : FilePath[];
 }
 
 export interface FriendType {

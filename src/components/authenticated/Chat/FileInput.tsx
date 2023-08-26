@@ -13,7 +13,6 @@ interface Image {
 const FileInput = ({ icon }: FileInputProps) => {
     const [images, setImages] = useState<any>([]);
     const [imagesUrl, setImagesUrl] = useState<Image[]>([]);
-
     const modal = createRef<HTMLInputElement>();
     const fileInput = createRef<HTMLInputElement>();
 
@@ -22,7 +21,13 @@ const FileInput = ({ icon }: FileInputProps) => {
     }
 
     useEffect(() => {
+       
+          console.log('efffect run ' , imagesUrl);
+        
+      }, [imagesUrl]);
 
+    useEffect(() => {
+        console.log('this run once')
         if (images.length < 1) return;
         modal.current!.checked = true;
 
@@ -38,14 +43,14 @@ const FileInput = ({ icon }: FileInputProps) => {
     }, [images])
 
     const imageChange = (e: any) => {
+        console.log('image change ')
         const files = e.target.files;
         setImages([...files]);
     }
 
     const removeImage = useCallback((id: number) => {
-        const newImagesUrl = imagesUrl.filter((image: Image) => image.id !== id);
-        setImagesUrl(newImagesUrl);
-    }, [imagesUrl]);
+        setImagesUrl(prevImagesUrl => prevImagesUrl.filter(image => image.id !== id));
+    }, []);
 
 
     const closeImageModal = useCallback(
@@ -91,7 +96,7 @@ const ImageBox = ({ image,removeImage } : ImageBoxProps) => {
     const ImCrossIcon = useMemo(() => ImCross, []);
 
     return (
-    <div key={image.id} className="w-24 h-24 object-contain relative ">
+    <div key={image.id} className="h-32 object-cover relative ">
         <button type="button" className="absolute top-0 right-0 text-red-500" onClick={() => removeImage(image.id)}>
             <ImCrossIcon />
         </button>
