@@ -5,19 +5,17 @@ import { ImCross } from 'react-icons/im'
 interface FileInputProps {
     icon: JSX.Element
 }
-
-interface Image {
+interface ImageFile{
     id: number,
-    url: string
+    file: File
 }
-
 interface FormData {
-    files: FileList;
+    files: File[];
   }
 
 const FileInput = ({ icon }: FileInputProps) => {
-    const [images, setImages] = useState<any>([]);
-    const [imagesUrl, setImagesUrl] = useState<Image[]>([]);
+    const [images, setImages] = useState<any[]>([]);
+   
     const modal = createRef<HTMLInputElement>();
     const fileInput = createRef<HTMLInputElement>();
     const { register, handleSubmit,resetField } = useForm<FormData>();
@@ -29,28 +27,31 @@ const FileInput = ({ icon }: FileInputProps) => {
 
     useEffect(() => {
         console.log('this run once')
+        if(modal.current?.checked && images.length < 1){
+            modal.current!.checked = false;
+            closeImageModal();
+        }
         if (images.length < 1) return;
         modal.current!.checked = true;
-        const newImagesUrl: any = [];
-        images.forEach((image: any) => {
-            const newImage = {
-                id: Math.floor(Math.random() * 100000000000000) + 1,
-                url: URL.createObjectURL(image)
-            }
-            newImagesUrl.push(newImage);
-        });
-        setImagesUrl(newImagesUrl);
+      
     }, [images])
 
     const imageChange = useCallback((event: BaseSyntheticEvent) => {
         const files = event.target.files;
         if (files) {
-            setImages([...files]);
+            const filesArray = Array.from(files);
+            const filesArrayWithId = filesArray.map((file) => {
+                return {
+                    id: Math.random() * 1000,
+                    file
+                }
+            })
+            setImages([...filesArrayWithId]);
         }
     }, []);
 
     const removeImage = useCallback((id: number) => {
-        setImagesUrl(prevImagesUrl => prevImagesUrl.filter(image => image.id !== id));
+        setImages((prevImages) => prevImages.filter((image) => image.id !== id));
     }, []);
 
     const closeImageModal = useCallback(
@@ -64,7 +65,13 @@ const FileInput = ({ icon }: FileInputProps) => {
     const onSubmit : SubmitHandler<FormData> = (data: any,event ?: BaseSyntheticEvent) => {
         
         event?.preventDefault();
-        formData.append("files", images);
+        const imagesData : any = [];
+        images.forEach((image: any) => {
+            imagesData.push(image.file);
+        });
+
+        formData.append("files", imagesData );
+        console.log(formData.get('files'))
     }
 
     return (
@@ -85,7 +92,7 @@ const FileInput = ({ icon }: FileInputProps) => {
                     {/* <h3 className="font-bold text-lg">Hello!</h3> */}
                     <div className="grid grid-cols-3 md:grid-cols-4 gap-3 place-items-center">
                         {
-                            imagesUrl.map((image: Image) => (
+                            images.map((image: ImageFile) => (
                                <MemorizedImageBox key={image.id} image={image} removeImage={removeImage} />
                             ))
                         }
@@ -101,19 +108,19 @@ const FileInput = ({ icon }: FileInputProps) => {
 }
 
 interface ImageBoxProps {
-    image: Image,
+    image: ImageFile,
     removeImage: (id: number) => void
 }
 
 const ImageBox = ({ image,removeImage } : ImageBoxProps) => {
     const ImCrossIcon = useMemo(() => ImCross, []);
-
+    const url = useMemo(() => URL.createObjectURL(image.file), [image.file]);
     return (
     <div key={image.id} className="h-32 w-20 object-contain relative ">
         <button type="button" className="absolute top-0 right-0 text-red-500" onClick={() => removeImage(image.id)}>
             <ImCrossIcon />
         </button>
-        <img src={image.url} alt="" className="w-full h-full rounded-lg" />
+        <img src={url} alt="" className="w-full h-full rounded-lg" />
     </div>
     )
 }
