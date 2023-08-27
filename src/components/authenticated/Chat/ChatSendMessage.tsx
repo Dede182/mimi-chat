@@ -25,7 +25,6 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
     const textArea = createRef<HTMLTextAreaElement>();
 
     const formRef = createRef<HTMLFormElement>();
-
     
     const handleTextareaKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === 'Enter' && event.shiftKey) {
@@ -53,15 +52,12 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
         },
         [user, chatId, chatPrefix]
       );
-     
 
     const formSubmit = useCallback(() => {
         formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
     }, [formRef]);
-  
 
   const handleClick = useCallback(()=> debounce(formSubmit, 200)(), [formSubmit]);
-
 
     const icons = useMemo(() => {
         return {
@@ -72,7 +68,6 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
         }
       }, [])
 
-      
     const isTyping = useCallback(() => {
         const text = getValues('message');
         if (text.length > 0) {
@@ -96,13 +91,13 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
         setValue('message', newText, { shouldDirty: true });
     };
 
-
-
     return (
         <div className="chat-input w-full h-[10%] fixed bottom-0 md:relative ">
 
-            <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="flex items-center justify-evenly  h-full gap-2">
+            <div className="flex items-center justify-evenly  h-full gap-2">
+                <form ref={formRef} onSubmit={handleSubmit(onSubmit)} id="sendMessageForm"  className='hidden'>
 
+                </form>
                 <div className="w-2/6 flex justify-evenly">
                     <MemoizedChatBtnCircle icon={icons.sticker} />
                     <MemoizedChatBtnCircle icon={icons.emoji} clickFn={emojiModal} />
@@ -111,6 +106,7 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
                 </div>
 
                 <textarea
+                    form='sendMessageForm'
                     {...register('message')}
                     placeholder='Write your Message'
                     onKeyUp={isTyping}
@@ -120,11 +116,12 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
 
                 <div className="w-1/6">
 
-                    <MemoizedChatBtnCircle type='button' clickFn={handleClick} icon={icons.send}  />
+                    <MemoizedChatBtnCircle type='button' form="sendMessageForm" clickFn={handleClick} icon={icons.send}  />
 
                 </div>
 
-            </form>
+            </div>
+            
 
         </div>
     )
