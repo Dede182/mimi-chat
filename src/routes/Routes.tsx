@@ -6,6 +6,7 @@ import GuestLayout from '../components/guest/GuestLayout'
 import { lazy, Suspense, useEffect, useState } from 'react';
 import Layout from '@/components/authenticated/base/Layout'
 import LoadingScreen from './LoadingScreen/LoadingScreen'
+import WelcomeChat from '@/components/authenticated/welcome/WelcomeChat'
 
 const Chat = lazy(()=>import('../components/authenticated/Chat/Chat'))
 const Login = lazy(()=>import('../components/guest/Login'))
@@ -42,6 +43,8 @@ const RoutesComponent = () => {
       <Route element={<Layout />}>
 
         { RouteFc(routesCollection.chat.path, <Guard><Chat/></Guard>)}
+
+        { RouteFc(routesCollection.mainChat.path, <Guard><WelcomeChat/></Guard>)}
 
         {windowWidth < 768 && RouteFc(routesCollection.aside.path,<Guard><Aside /></Guard>)}
       </Route>

@@ -19,9 +19,10 @@ const Layout = () => {
 
   useEffect(() => {
     if (!profile) {
+      console.log('profile was called')
       dispatch(fetchProfile({ url: '/user/profile', token: token! }))
     }
-  }, [dispatch, profile, token])
+  }, [dispatch, token])
 
   useEffect(() => {
     const handleResize = () => {

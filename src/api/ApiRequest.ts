@@ -1,5 +1,5 @@
 import Cookies  from 'js-cookie';
-import { InternalAxiosRequestConfig, AxiosResponse } from './../../node_modules/axios/index.d';
+import { InternalAxiosRequestConfig, AxiosResponse, AxiosError } from './../../node_modules/axios/index.d';
 import axios from "axios";
 
 type ApiRequestBodyType = {
@@ -7,31 +7,35 @@ type ApiRequestBodyType = {
     url : string,
     params? : object | string,
     token? : string
+    responseType? : string
 }
+
+axios.interceptors.request.use((config : InternalAxiosRequestConfig) => {
+    config.headers["Accept"] = "application/json";
+    
+    const userToken = Cookies.get('token'); // Assuming Cookies is imported and available
+    if (userToken !== undefined) {
+        config.headers['Authorization'] = `Bearer ${userToken}`;
+    }
+    
+    if (config.method === "post") {
+        config.headers['Content-Type'] = 'multipart/form-data';
+        //check url has download words 
+        if(config.url?.includes('download'))
+        {
+            config.responseType = 'blob';
+        }
+    } else {
+        config.headers["Content-Type"] = "application/json";
+    }
+    return config;
+});
 
 export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosResponse<T> | undefined> => {
     let result,
-        responseType,
         parameter
     const path :string = import.meta.env.VITE_SS_URL;
-
-    const userToken = Cookies.get('token') ??  value.token;
-
-    axios.interceptors.request.use((config:InternalAxiosRequestConfig ) => {
-        config.headers["Content-Type"] = "application/json";
-        config.headers["Accept"] = "application/json";
-        
-        if(userToken !== undefined)
-        {
-        config.headers['Authorization'] = `Bearer ${userToken}`;   
-        }
-        if(value.method === "post")
-        {
-            config.headers['Content-Type'] = 'multipart/form-data';
-        }
-        return config;
-    });
-
+  
     if (
         value.method === "post" ||
         value.method === "patch" ||
@@ -51,7 +55,7 @@ export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosR
             method: value.method,
             url: value.url,
             params: value.params,
-            responseType,
+
         };
     }
     // calling api
@@ -59,7 +63,7 @@ export const ApiRequest = async <T>(value : ApiRequestBodyType) : Promise<AxiosR
         .then((response) => {
             result = response;
         })
-        .catch((err) => (result = err));
+        .catch((err : AxiosError) => (result = err));
     // console.log(result);
     return result;
 }

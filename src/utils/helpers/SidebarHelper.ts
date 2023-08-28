@@ -5,5 +5,9 @@ import { HiLightBulb,HiPlus} from 'react-icons/hi'
 import { LuSticker } from 'react-icons/lu'
 import { BsEmojiLaughing, BsFillSendFill, } from 'react-icons/bs'
 import { BiArrowBack } from 'react-icons/bi'
+import { ImCross } from 'react-icons/im'
 
-export {AiFillSetting,AiFillStar,HiUserGroup,FaPowerOff,HiLightBulb,HiPlus,LuSticker,BsEmojiLaughing,BsFillSendFill,BiArrowBack} ;
+export {
+    ImCross,
+    AiFillSetting,AiFillStar,HiUserGroup,FaPowerOff,HiLightBulb,HiPlus,LuSticker,
+    BsEmojiLaughing,BsFillSendFill,BiArrowBack} ;

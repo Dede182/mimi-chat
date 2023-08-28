@@ -23,6 +23,9 @@ interface Route {
   
 // eslint-disable-next-line react-refresh/only-export-components
 export const routesCollection : Record<string,Route> = {
+    mainChat : {
+      path: '/chat',
+    },
     chat:  {
       path: '/chat/:id',
       // element: middleware(Guard, <Chat/>)

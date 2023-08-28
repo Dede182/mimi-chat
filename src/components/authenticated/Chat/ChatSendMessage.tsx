@@ -38,7 +38,7 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
         handleSubmit,
         setValue,
         getValues,
-        reset,
+        resetField,
       } = useForm<FormValues>();
     
 
@@ -46,7 +46,7 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
         (data: any) => {
               sendEventMessage(data.message, user!.id, chatId!, chatPrefix.current,'text').then((res : any) => {
                 if (res.status == 200) {
-                    reset()
+                    resetField('message');
                 }
             })
         },
@@ -102,7 +102,7 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
                     <MemoizedChatBtnCircle icon={icons.sticker} />
                     <MemoizedChatBtnCircle icon={icons.emoji} clickFn={emojiModal} />
 
-                    <FileInput icon={icons.plus} />
+                    <FileInput icon={icons.plus} user={user} chatId={chatId !} chatPrefix={chatPrefix} />
                 </div>
 
                 <textarea

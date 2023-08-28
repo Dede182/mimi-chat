@@ -118,6 +118,7 @@ const AddFavorite = () => {
                             {/* Your form and rendering logic here */}
                             {loading ? <BeatLoader color='blue' className="text-center mt-8" loading={true} size={10} /> : null}
                             <div className="flex flex-col gap-8 mt-8">
+                                { favorites.length === 0 ? <div className="text-center text-gray-500 capitalize">{t('add more friends to get better result')}</div> : null}
                                 {favorites.map((fav) => (
                                     <div key={fav.id} className="user-chat ">
                                         <InlineUser user={fav} />

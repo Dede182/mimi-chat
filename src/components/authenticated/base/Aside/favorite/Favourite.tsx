@@ -63,13 +63,16 @@ const Favourite = () => {
             </div>
           </div>
 
+         
           <div className="favorites-body  h-[87vh] scroll overflow-y-scroll">
             {loading ? <div className="w-full text-center ">
               <BeatLoader color='#1c9dea' loading={true} size={10} />
             </div> :
-              favorites.map((favorite) => (
+              favorites.length > 0 ? favorites.map((favorite) => (
                 <MemorizedChatLine key={favorite.favorite.id} favoriteUser={favorite} />
-              ))
+              )) : <div className="w-full text-center text-gray-500">
+                <p>{t('No favorites yet')}</p>
+              </div>
             }
           </div>
 

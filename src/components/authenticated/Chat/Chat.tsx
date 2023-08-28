@@ -6,7 +6,7 @@ import { MemorizedChatMessageLine, InfiniteScroll } from '@/components/authentic
 import Cookies from 'js-cookie';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ChatMessageDatatType, FriendType } from './types/ChatTypes';
+import { ChatMessageDatatType, ExpectedErrorType, FriendType } from './types/ChatTypes';
 import { getChatData, updateLastMessage } from '@/api/generals/ChatList';
 import { useAppSelector } from '@/app/hooks';
 import { selectUser, selectOnlineActiveUsers } from '@/app/slices/slices';
@@ -16,6 +16,10 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { AuthUser } from '@/@types/users';
 import ChatSendMessage from './ChatSendMessage';
+import ChatFile from './ChatFile/ChatFile';
+import { AxiosError, AxiosResponse } from 'axios';
+import ErrorPage from '@/components/Error/Error';
+
 
 
 const Chat = () => {
@@ -27,6 +31,8 @@ const Chat = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [currentChatId, setCurrentChatId] = useState<string>();
   const [typing, setTyping] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errors, setErrors] = useState<ExpectedErrorType>([]);
   const token = Cookies.get('token');
   const params = useParams();
   const chatId = params['id'];
@@ -72,8 +78,17 @@ const Chat = () => {
   const fetchChatList = useCallback(async (pageNum: number) => {
 
     const url = `user/chats/messages/${chatId}?page=${pageNum}`;
-    const res = await getChatData(url, token!)
-    //reverse the chat messages
+    const res = await getChatData(url, token!) as AxiosResponse
+    if(res instanceof AxiosError && res.response)
+    {
+      console.log(res);
+      setIsError(true);
+      setLoading(false);
+      const errorStatus = res.response.status as number;
+      const errorMessage = res.response.data.message as string;
+      setErrors({ status: errorStatus, message: errorMessage });
+      return;
+    }
     const reversed = res.data.data.chatMessages.data;
     chatPrefix.current = res.data.data.chat_prefix;
     setLastPage(res.data.data.chatMessages.last_page)
@@ -83,6 +98,7 @@ const Chat = () => {
     return () => {
       setMessages([]);
       setLoading(true);
+      setIsError(false);
     }
   }, [chatId, currentChatId, token])
   //memorize the icons
@@ -151,8 +167,12 @@ const Chat = () => {
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all ">
-
-      <div className="w-full h-[85%] md:px-12 md:pt-10 ">
+      
+      {
+        isError ? <ErrorPage errors={errors} /> :
+       (
+        <>
+         <div className="w-full h-[85%] md:px-12 md:pt-10 ">
         <div className="h-full flex flex-col gap-4 ">
           {loading ?
             <div>
@@ -207,8 +227,11 @@ const Chat = () => {
           </div>
         </div>
       </div>
-
             <ChatSendMessage chatPrefix={chatPrefix} channelManager={channelManager} chatId={chatId} user={user} subscribe={subscribe} />
+      <ChatFile />
+        </>
+       )
+      }
     </div>
   )
 }

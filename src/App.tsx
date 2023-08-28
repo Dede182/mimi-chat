@@ -1,7 +1,6 @@
 import { useAppSelector } from "./app/hooks";
 import { selectTheme } from "./app/slices/settingSlices";
 import RoutesComponent from "./routes/Routes";
-
 import Echo from 'laravel-echo';
 
 import Pusher from 'pusher-js';
@@ -22,6 +21,8 @@ const App = () => {
 
 
   })
+
+
   return (
     <div className={`${theme} theme w-full max-h-[100vh] transition-all`}>
       <RoutesComponent />

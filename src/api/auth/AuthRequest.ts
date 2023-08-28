@@ -34,6 +34,7 @@ export const postLogin = async (url: string, body: any) => {
 }
 
 export const getProfile = async (url: string, token: string) => {
+    console.log("get profile api was called")
     try {
         const obj = {
             method: "get",

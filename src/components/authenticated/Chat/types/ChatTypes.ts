@@ -11,6 +11,7 @@ export interface ChatListDataType {
 }
 
 export interface FilePath{
+    name: string,
     preview : string,
     hd : string,
 }
@@ -31,3 +32,9 @@ export interface FriendType {
     isActive: boolean,
   }
   
+
+export interface ExpectedErrorType
+{
+  status : number;
+  message : string;
+}

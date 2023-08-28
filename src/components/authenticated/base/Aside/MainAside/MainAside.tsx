@@ -27,19 +27,19 @@ const MainAside = () => {
 
     const res = await getChatData(`user/chats/list?page=${page}`, token!)
     const result = res.data.data.data
-    ske.chatCount = result.length > 6 ? 6 : result.length;  
+    ske.chatCount = result.length > 6 ? 6 : result.length;
     localStorage.setItem('ske', JSON.stringify(ske));
 
     const ordered = res.data.data.data.sort((a: ChatListDataType, b: ChatListDataType) => {
       return sortedByDate({ a, b });
     })
     setLastPage(res.data.data.last_page)
-    setChatList((prevMessages) => [...prevMessages,...ordered])
+    setChatList((prevMessages) => [...prevMessages, ...ordered])
 
     setLoading(false);
 
   }, [token])
-  
+
   useEffect(() => {
     setLoading(true);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,7 +57,7 @@ const MainAside = () => {
       setChatList([]);
       window.removeEventListener('newChatAdded', handleItemAdded);
     };
-  }, [token,page])
+  }, [token, page])
 
   const loadMore = useCallback(() => {
     const pageNum = page + 1;
@@ -104,7 +104,7 @@ const MainAside = () => {
         name: 'cast 4',
       },
     ]
-    
+
 
   return (
     <div className="animate__animated animate__fadeIn z-50 relative md:max-w-[30vw] h-[100vh]  ">
@@ -139,30 +139,35 @@ const MainAside = () => {
           </div>
 
           <div className="flex flex-col mt-8 h-full">
-            {loading ? 
+            {loading ?
               <div className="flex px-10 gap-8">
-                 <Skeleton  height={80} baseColor='#96969613' className='w-[80vw] md:w-[24vw]' highlightColor='#6f6e6e13' count={ske.chatCount}/>
+                <Skeleton height={80} baseColor='#96969613' className='w-[80vw] md:w-[24vw]' highlightColor='#6f6e6e13' count={ske.chatCount} />
               </div>
-          :
+              :
               <>
+                {chatList.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <h3 className="text-2xl font-bold">No Messages</h3>
+                    <p className="text-gray-500">Start a new conversation</p>
+                  </div>
+                ) :
+                  <InfiniteScroll
+                    dataLength={chatList.length}
+                    next={loadMore}
+                    scrollableTarget="chatListBody"
+                    hasMore={lastPage > page}
+                    loader={(<div className="w-full text-center ">
+                      <BeatLoader color='#1c9dea' loading={true} size={10} />
+                    </div>)
+                    }>
+                    {chatList.map((chat, index) => (
+                      <MemorizedChatLine key={chat.chat_id || index} chatline={chat} />
+                    ))}
+                  </InfiniteScroll>
 
-                <InfiniteScroll
-                  dataLength={chatList.length}
-                  next={loadMore}
-                  scrollableTarget="chatListBody"
-                  hasMore={lastPage > page}
-                  loader={(<div className="w-full text-center ">
-                    <BeatLoader color='#1c9dea' loading={true} size={10} />
-                  </div>)
-                  }>
-                  {chatList.map((chat, index) => (
-                    <MemorizedChatLine key={chat.chat_id || index} chatline={chat} />
-                  ))}
-                </InfiniteScroll>
-
+                }
               </>
             }
-
 
           </div>
         </div>
