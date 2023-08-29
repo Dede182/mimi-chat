@@ -46,9 +46,8 @@ const ChatFile = () => {
         <>
             <input type="checkbox" id="my_modal_6" className="modal-toggle" checked={isOpen} />
             <div className="modal">
-                <div className="modal-box">
-                    <h3 className={styles.h3Title}>Hello!</h3>
-                    <p className="py-4">This modal works with a hidden checkbox!</p>
+                <div className="modal-box scroll">
+                    
                     <img src={image} className={styles.imgContainer} alt="" />
                     <div className="modal-action">
                         <button onClick={downloadImage} disabled={loading} className="btn btn-sm btn-primary">

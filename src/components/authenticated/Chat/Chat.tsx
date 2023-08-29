@@ -226,7 +226,7 @@ const Chat = () => {
         </div>
       </div>
             <ChatSendMessage chatPrefix={chatPrefix} channelManager={channelManager} chatId={chatId} user={user} subscribe={subscribe} />
-      <ChatFile />
+            <ChatFile />
         </>
        )
       }

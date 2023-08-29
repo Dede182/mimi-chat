@@ -1,5 +1,6 @@
 // Import SweetAlert library
 import Swal from 'sweetalert2';
+import '@sweetalert2/theme-dark/dark.scss';
 
 interface ToastProps {
     icon: 'success' | 'error' | 'warning' | 'info' | 'question';

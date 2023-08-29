@@ -1,10 +1,16 @@
 import { t } from "i18next";
 import { SettingTypes } from "../types";
 import { IoIosArrowBack } from 'react-icons/io';
+import { useAppSelector } from "@/app/hooks";
+import { selectUser } from "@/app/slices/slices";
+import ProfilePhotoEdit from "./ProfilePhotoEdit";
+
 interface AccountSettingProps {
   witch: (setting: SettingTypes) => void;
 }
 const AccountSetting = ({ witch }: AccountSettingProps) => {
+
+  const user = useAppSelector(selectUser);
   return (
     <div className="flex flex-col md:w-[27vw]">
       <div className="flex justify-between items-center px-10 py-5">
@@ -17,7 +23,12 @@ const AccountSetting = ({ witch }: AccountSettingProps) => {
             <span className="sidebar-icon"><IoIosArrowBack /></span>
           </button>
         </div>
+
       </div>
+
+      <div className="flex flex-col">
+            <ProfilePhotoEdit user={user !} />
+        </div>
     </div>
   )
 }

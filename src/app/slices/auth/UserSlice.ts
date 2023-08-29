@@ -19,6 +19,7 @@ const initalAuthState : initialStateType = {
     url: string,
     token: string
  }
+
 export const fetchProfile = createAsyncThunk('/fetch/profile', async ({url,token} : FetchProfileProps) => {
 
     try {
@@ -34,6 +35,9 @@ export const userSlice = createSlice({
     name: 'user',
     initialState: initalAuthState,
     reducers: {
+        changeUserProfilePicture : (state,action) =>{
+            state.user!.profile_photo = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchProfile.pending, (state) => {
@@ -51,6 +55,8 @@ export const userSlice = createSlice({
 })
 
 export const selectUser = (state : RootState) => state.user!.user;
+
+export const {changeUserProfilePicture} = userSlice.actions;
 
 export default userSlice.reducer;
 // export const {} = userSlice.actions;

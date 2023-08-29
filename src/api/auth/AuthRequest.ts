@@ -57,3 +57,11 @@ export const getProfile = async (url: string, token: string) => {
         }
     }
 }
+
+export const updateProfilePicture = async (body : FormData) => {
+        return await ApiRequest({
+            method: 'post',
+            url: '/user/profile/photo/update',
+            params : body
+        }) 
+}
