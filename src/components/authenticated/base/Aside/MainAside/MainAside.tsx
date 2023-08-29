@@ -25,18 +25,20 @@ const MainAside = () => {
   const [lastPage, setLastPage] = useState<number>(1)
   const fetchChatList = useCallback(async (page: number) => {
 
-    const res = await getChatData(`user/chats/list?page=${page}`, token!)
-    const result = res.data.data.data
-    ske.chatCount = result.length > 6 ? 6 : result.length;
-    localStorage.setItem('ske', JSON.stringify(ske));
-
-    const ordered = res.data.data.data.sort((a: ChatListDataType, b: ChatListDataType) => {
-      return sortedByDate({ a, b });
-    })
-    setLastPage(res.data.data.last_page)
-    setChatList((prevMessages) => [...prevMessages, ...ordered])
-
-    setLoading(false);
+    const res = await getChatData(`user/chats/list?page=${page}`, token!) !
+    if(res){
+      const result = res && res.data.data.data
+      ske.chatCount = result.length > 6 ? 6 : result.length;
+      localStorage.setItem('ske', JSON.stringify(ske));
+  
+      const ordered = result.sort((a: ChatListDataType, b: ChatListDataType) => {
+        return sortedByDate({ a, b });
+      })
+      setLastPage(res.data.data.last_page)
+      setChatList((prevMessages) => [...prevMessages, ...ordered])
+  
+      setLoading(false);
+    }
 
   }, [token])
 

@@ -1,0 +1,13 @@
+@import '../../../../components/ui/styles/btn';
+
+.h3Title{
+    @apply font-bold text-lg;
+}
+
+.imgContainer{
+    @apply w-full h-full;
+}
+
+.closeBtnSoft{
+    @apply btn btn-sm btn-soft;
+}

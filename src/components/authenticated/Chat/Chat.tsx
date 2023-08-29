@@ -19,9 +19,6 @@ import ChatSendMessage from './ChatSendMessage';
 import ChatFile from './ChatFile/ChatFile';
 import { AxiosError, AxiosResponse } from 'axios';
 import ErrorPage from '@/components/Error/Error';
-
-
-
 const Chat = () => {
 
   const [messages, setMessages] = useState<ChatMessageDatatType[]>([]);
@@ -32,7 +29,7 @@ const Chat = () => {
   const [currentChatId, setCurrentChatId] = useState<string>();
   const [typing, setTyping] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
-  const [errors, setErrors] = useState<ExpectedErrorType>([]);
+  const [errors, setErrors] = useState<ExpectedErrorType>();
   const token = Cookies.get('token');
   const params = useParams();
   const chatId = params['id'];
@@ -74,6 +71,7 @@ const Chat = () => {
       setCurrentChatId(undefined);
     }
   }, [chatId, token])
+
 
   const fetchChatList = useCallback(async (pageNum: number) => {
 
@@ -169,7 +167,7 @@ const Chat = () => {
     <div className="chat-bg flex flex-col justify-between transition-all ">
       
       {
-        isError ? <ErrorPage errors={errors} /> :
+        isError ? <ErrorPage errors={errors !} /> :
        (
         <>
          <div className="w-full h-[85%] md:px-12 md:pt-10 ">

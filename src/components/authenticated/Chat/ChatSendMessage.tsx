@@ -1,5 +1,5 @@
 import React, { createRef, useCallback, useMemo } from 'react'
-import FileInput from './FileInput'
+import FileInput from './FileInput/FileInput'
 import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill,  } from '@/utils/helpers/SidebarHelper'
 import { useForm } from 'react-hook-form';
 import { MemoizedChatBtnCircle } from '@/components/authenticated/Chat/ChatIndex';
@@ -8,9 +8,12 @@ import { sendEventMessage } from '@/api/generals/ChatList';
 import { AuthUser } from '@/@types/users';
 import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
 import { PresenceChannel } from 'laravel-echo';
+import { alertToast } from '@/components/tools/Toast/AlertToast';
+import { AxiosError } from 'axios';
+import InputError from '@/components/ui/Fields/InputError';
 
 type FormValues = {
-    message: string
+    message: string,
   }
 
 interface Props {
@@ -25,7 +28,8 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
     const textArea = createRef<HTMLTextAreaElement>();
 
     const formRef = createRef<HTMLFormElement>();
-    
+    const [loading, setLoading] = React.useState<boolean>(false);
+    const [fall, setFall] = React.useState<any[]>([]);
     const handleTextareaKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (event.key === 'Enter' && event.shiftKey) {
             event.preventDefault(); // Prevent newline
@@ -35,6 +39,7 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
 
     const {
         register,
+        formState: { errors },
         handleSubmit,
         setValue,
         getValues,
@@ -43,15 +48,28 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
     
 
     const onSubmit = useCallback(
-        (data: any) => {
-              sendEventMessage(data.message, user!.id, chatId!, chatPrefix.current,'text').then((res : any) => {
-                if (res.status == 200) {
-                    resetField('message');
+       async (data: any) => {
+              if(!loading)
+              {
+                setLoading(true);
+                setFall([]);
+                const res = await sendEventMessage(data.message, user!.id, chatId!, chatPrefix.current,'text')
+                if(res instanceof AxiosError){
+                  res.response && setFall([res.response.data]);
                 }
-            })
-        },
+                else{
+                  res && res.status === 200 && resetField('message');
+                }
+                setLoading(false);
+              }
+              },
         [user, chatId, chatPrefix]
       );
+
+    if(fall.length > 0){
+      alertToast({icon: 'error', title: fall[0].message})
+      setFall([])
+    }
 
     const formSubmit = useCallback(() => {
         formRef.current?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
@@ -107,16 +125,20 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
 
                 <textarea
                     form='sendMessageForm'
-                    {...register('message')}
+                    {...register('message' , { required: true })}
                     placeholder='Write your Message'
                     onKeyUp={isTyping}
                     // ref={textArea}
                     onKeyDown={handleTextareaKeyDown}
-                    className="w-3/6 resize-none scroll pt-5 break-words rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4"></textarea>
+                    className="w-3/6 resize-none scroll pt-5 break-words rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4"
+                    required
+                    ></textarea>
+                <InputError errors={errors.message !} />
+
 
                 <div className="w-1/6">
 
-                    <MemoizedChatBtnCircle type='button' form="sendMessageForm" clickFn={handleClick} icon={icons.send}  />
+                    <MemoizedChatBtnCircle type='button' form="sendMessageForm" loading={loading} clickFn={handleClick} icon={icons.send}  />
 
                 </div>
 

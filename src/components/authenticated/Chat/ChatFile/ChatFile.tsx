@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { BsFillCloudDownloadFill } from 'react-icons/bs';
 import { useCallback, useState } from "react";
 import { ClipLoader } from "react-spinners";
+import styles from "./style.module.scss";
 const ChatFile = () => {
     const params = useParams();
     const chatId = params['id'];
@@ -46,14 +47,14 @@ const ChatFile = () => {
             <input type="checkbox" id="my_modal_6" className="modal-toggle" checked={isOpen} />
             <div className="modal">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Hello!</h3>
+                    <h3 className={styles.h3Title}>Hello!</h3>
                     <p className="py-4">This modal works with a hidden checkbox!</p>
-                    <img src={image} className="w-full h-full" alt="" />
+                    <img src={image} className={styles.imgContainer} alt="" />
                     <div className="modal-action">
                         <button onClick={downloadImage} disabled={loading} className="btn btn-sm btn-primary">
                             {loading ? <ClipLoader size={15} color="#fff" /> : <BsFillCloudDownloadFill />}
                         </button>
-                        <button onClick={closeChatFileBtn} className="btn btn-sm btn-soft">Close</button>
+                        <button onClick={closeChatFileBtn} className={styles.closeBtnSoft}>Close</button>
                     </div>
                 </div>
             </div>

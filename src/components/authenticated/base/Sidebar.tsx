@@ -10,7 +10,7 @@ import { memo, useCallback, useMemo } from "react";
 import { changeTheme, selectTheme } from "@/app/slices/settingSlices";
 import { ImCross } from 'react-icons/im'
 import LogoSvg from "@/components/svgs/Logo/logo";
-
+import { useNavigate } from 'react-router-dom';
 const logout = () => {
 
     Cookies.remove("token")
@@ -20,7 +20,7 @@ const Sidebar = () => {
 
     const dispatch = useAppDispatch();
     const AiImCrossIcon = useMemo(() => ImCross, []);
-
+    const navigate = useNavigate();
     const theme = useAppSelector(selectTheme) == "theme-dark" ? "theme-light" : "theme-dark";
 
     const user = useAppSelector(selectUser);
@@ -30,6 +30,11 @@ const Sidebar = () => {
     const toggle = useCallback(() => {
             dispatch(toggleSidebar());
     }, [dispatch])
+
+    const redirectToPath = () => {
+        toggle();
+        navigate('/chat');
+      };
 
     const sidebarWidth = sidebar.isOpen ? 'w-[min(8rem,10rem)]' : 'w-[0%] ';
     const sidebarUl = sidebar.isOpen ? 'scale-1' : 'scale-0 ';
@@ -54,9 +59,9 @@ const Sidebar = () => {
     return (
         <div className={`${sidebarWidth} sidebar gap-12 absolute z-[9999]  md:relative`}>
 
-            <div className="sidebar-logo ">
+            <button onClick={redirectToPath} className="sidebar-logo ">
                 {icons.logo}
-            </div>
+            </button>
 
             <ul className={`${sidebarUl} flex flex-col transition-transform `}>
                 <li>

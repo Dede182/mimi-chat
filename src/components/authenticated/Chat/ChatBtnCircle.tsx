@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { ClipLoader } from "react-spinners"
 
 
 type CircleProps = {
@@ -24,7 +25,7 @@ const ChatBtnCircle = ({ icon, clickFn, akey = "spine", type ,loading ,form }: C
         <button type={type} className={`sidebar-item ${akey}`} form={form} disabled={loading ? true : false}
             onClick={click}>
             <span className="sidebar-icon">
-                {icon}
+                {loading ? <ClipLoader color='#fff' size={20} /> : icon}
             </span>
         </button>
     )

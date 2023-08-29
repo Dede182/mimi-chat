@@ -1,6 +1,6 @@
 import MemoSidebar from './Sidebar'
 import { Outlet } from 'react-router-dom'
-import '@/index.scss'
+import '../../../index.scss'
 import './style.scss';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { fetchProfile, selectUser } from '@/app/slices/auth/UserSlice';

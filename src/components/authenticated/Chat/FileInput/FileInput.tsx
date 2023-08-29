@@ -4,6 +4,8 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { ClipLoader } from "react-spinners"
 import { BsFillSendFill, ImCross } from '@/utils/helpers/SidebarHelper'
 import { AxiosError } from "axios"
+import styles from './style.module.scss'
+
 
 interface FileInputProps {
     icon: JSX.Element,
@@ -100,7 +102,7 @@ const FileInput = ({ icon, user, chatId, chatPrefix }: FileInputProps) => {
                 setErrors(() => [ e.message]);
             }
             else {
-                res.status === 200 && closeImageModal();
+              res && res.status === 200 && closeImageModal();
             }
             setLoading(false);
         }
@@ -115,14 +117,14 @@ const FileInput = ({ icon, user, chatId, chatPrefix }: FileInputProps) => {
             <input type="file"
                 {...register('files')}
                 className="hidden" form="fileSendForm" onChange={imageChange} accept="image/*" ref={fileInput} multiple />
-            <button type="button" tabIndex={0} className={`sidebar-item `} onClick={pop}>
-                <span className="sidebar-icon">
+            <button type="button" tabIndex={0} className={styles.sidebarItem} onClick={pop}>
+                <span className={styles.sidebarIcon}>
                     {icon}
                 </span>
             </button>
             <input type="checkbox" ref={modal} id="my_modal_6" className="modal-toggle" />
             <div className="modal ">
-                <div className="modal-box pt-12 w-fit min-w-[25vw] max-w-[80vw] md:max-w-[40vw]">
+                <div className={styles.modalContainer}>
                     {/* <h3 className="font-bold text-lg">Hello!</h3> */}
                     <div className="flex flex-wrap gap-3 justify-center">
                         {
@@ -131,19 +133,19 @@ const FileInput = ({ icon, user, chatId, chatPrefix }: FileInputProps) => {
                             ))
                         }
                     </div>
-                    <div className="modal-action justify-between">
+                    <div className={styles.modalFooter}>
                         <div className="">
-                            {errors.length > 0 && <div className="text-red-500">
+                            {errors.length > 0 && <div className={styles.errorText}>
                                 {errors.map((error: string) => (
                                     <p key={error}>{error}</p>
                                 ))}
                             </div>}
                         </div>
-                        <div className="flex gap-5">
-                            <button type="button" onClick={closeImageModal} className="btn btn-soft btn-sm md:btn-md">Close!</button>
+                        <div className={styles.modalBtnContainer}>
+                            <button type="button" onClick={closeImageModal} className={styles.btnSoft}>Close!</button>
                             <button form="fileSendForm" type="submit"
                                 disabled={loading}
-                                className="btn btn-primary btn-sm md:btn-md">
+                                className={styles.btnPrimary}>
                                 {loading ? <ClipLoader size={15} color="#fff" /> : icons.send}
                             </button>
                         </div>

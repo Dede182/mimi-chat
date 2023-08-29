@@ -2,7 +2,6 @@ import { useAppSelector } from "./app/hooks";
 import { selectTheme } from "./app/slices/settingSlices";
 import RoutesComponent from "./routes/Routes";
 import Echo from 'laravel-echo';
-
 import Pusher from 'pusher-js';
 
 const App = () => {
@@ -18,8 +17,6 @@ const App = () => {
       forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
       enabledTransports: ['ws', 'wss'],
       encrypted: false,
-
-
   })
 
 

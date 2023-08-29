@@ -1,0 +1,35 @@
+@import "../styles.scss";
+@import '../../base/style.scss';
+@import '../../../../components/ui/styles/btn';
+
+.sidebarItem {
+  @apply sidebar-item
+}
+
+.sidebarIcon{
+    @apply sidebar-icon
+}
+
+.modalContainer{
+    @apply modal-box pt-12 w-fit min-w-[25vw] max-w-[80vw] md:max-w-[40vw]
+}
+
+.modalFooter{
+    @apply modal-action justify-between
+}
+
+.errorText{
+    @apply text-red-500
+}
+
+.modalBtnContainer{
+    @apply flex gap-5
+}
+
+.btnSoft{
+    @apply btn btn-soft btn-sm md:btn-md
+}
+
+.btnPrimary{
+    @apply btn btn-primary btn-sm md:btn-md
+}
