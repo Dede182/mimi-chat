@@ -1,5 +1,6 @@
 export type Styles = {
     'logo': string;
+    'spin' : string;
   };
   
   export type ClassNames = keyof Styles;

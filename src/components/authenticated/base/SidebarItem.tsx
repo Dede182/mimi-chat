@@ -7,10 +7,11 @@ type SidebarItemProps = {
     icon: JSX.Element,
     aside?: CurrentAside,
     clickFn ?: () => void,
-    akey? : string
+    akey? : string,
+    toggle ?: () => void
 }
 
-const SidebarItems = ({ icon, aside ,clickFn ,akey ="spine" }: SidebarItemProps) => {
+const SidebarItems = ({ icon, aside ,clickFn ,akey ="spine" ,toggle}: SidebarItemProps) => {
 
     const dispatch = useAppDispatch();
 
@@ -20,8 +21,11 @@ const SidebarItems = ({ icon, aside ,clickFn ,akey ="spine" }: SidebarItemProps)
             clickFn();
         }
         else{
+            if(toggle)
+            {
+                toggle();
+            }
             dispatch(changeAside(aside));
-
         }
     }
     akey = akey ? akey : "spin";

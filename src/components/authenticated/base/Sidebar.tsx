@@ -73,15 +73,15 @@ const Sidebar = () => {
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.star} akey="spin" aside={CurrentAside.FAVORITES} />
+                    <MemorizedSidebarItem icon={icons.star} akey="spin" toggle={toggle} aside={CurrentAside.FAVORITES} />
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.contacts} akey="move" aside={CurrentAside.CONTACTS} />
+                    <MemorizedSidebarItem icon={icons.contacts} akey="move" toggle={toggle} aside={CurrentAside.CONTACTS} />
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.setting} akey="spin" aside={CurrentAside.SETTINGS} />
+                    <MemorizedSidebarItem icon={icons.setting} akey="spin" toggle={toggle} aside={CurrentAside.SETTINGS} />
                 </li>
 
                 <li >

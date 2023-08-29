@@ -27,9 +27,11 @@
 }
 
 .btnSoft{
+    color : var(--color-font)!important;
     @apply btn btn-soft btn-sm md:btn-md
 }
 
 .btnPrimary{
+    color : var(--color-font)!important;
     @apply btn btn-primary btn-sm md:btn-md
 }

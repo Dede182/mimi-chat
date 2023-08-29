@@ -5,7 +5,7 @@ import { lazy, Suspense, useCallback, useMemo, } from 'react';
 import {AiOutlineAppstore} from 'react-icons/ai'
 const Contacts = lazy(() => import('./Aside/Contacts'));
 const Favourite = lazy(() => import('./Aside/favorite/Favourite'));
-const Setting = lazy(() => import('./Aside/Setting'));
+const Setting = lazy(() => import('./Aside/setting/Setting'));
 const MainAside = lazy(() => import('./Aside/MainAside/MainAside'));
 import { toggleSidebar } from "@/app/slices/sidebarSlice";
 

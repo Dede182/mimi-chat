@@ -15,7 +15,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { ske } from '@/skeletons/ske'
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-
+import { TbReload } from '@/utils/helpers/SidebarHelper'
 const MainAside = () => {
 
   const [chatList, setChatList] = useState<Array<ChatListDataType>>([])
@@ -25,18 +25,18 @@ const MainAside = () => {
   const [lastPage, setLastPage] = useState<number>(1)
   const fetchChatList = useCallback(async (page: number) => {
 
-    const res = await getChatData(`user/chats/list?page=${page}`, token!) !
-    if(res){
+    const res = await getChatData(`user/chats/list?page=${page}`, token!)!
+    if (res) {
       const result = res && res.data.data.data
       ske.chatCount = result.length > 6 ? 6 : result.length;
       localStorage.setItem('ske', JSON.stringify(ske));
-  
+
       const ordered = result.sort((a: ChatListDataType, b: ChatListDataType) => {
         return sortedByDate({ a, b });
       })
       setLastPage(res.data.data.last_page)
       setChatList((prevMessages) => [...prevMessages, ...ordered])
-  
+
       setLoading(false);
     }
 
@@ -61,8 +61,15 @@ const MainAside = () => {
     };
   }, [token, page])
 
+  const refresh = useCallback(() => {
+    setLoading(true);
+    setChatList([])
+    fetchChatList(page)
+  }, [fetchChatList, page])
+
   const loadMore = useCallback(() => {
     const pageNum = page + 1;
+
     if (lastPage >= pageNum) {
       setPage(pageNum);
       console.log('loadmore run')
@@ -161,7 +168,21 @@ const MainAside = () => {
                     loader={(<div className="w-full text-center ">
                       <BeatLoader color='#1c9dea' loading={true} size={10} />
                     </div>)
-                    }>
+                    }
+                    refreshFunction={refresh}
+                    pullDownToRefresh
+                    pullDownToRefreshThreshold={50}
+                    pullDownToRefreshContent={
+                      <div className='w-full text-2xl flex items-center justify-center mb-10 '>
+                        <TbReload />
+                      </div>
+                    }
+                    releaseToRefreshContent={
+                      <div className='w-full text-2xl flex items-center justify-center mb-10 '>
+                        <TbReload />
+                      </div>
+                    }
+                  >
                     {chatList.map((chat, index) => (
                       <MemorizedChatLine key={chat.chat_id || index} chatline={chat} />
                     ))}
@@ -176,7 +197,7 @@ const MainAside = () => {
 
 
       </div>
-    </div>
+    </div >
 
   )
 }

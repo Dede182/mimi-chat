@@ -1,11 +1,14 @@
 .logo{
     width: 5vw;
     //animate slightly slower and rotate reverse and reverse
-    animation : spin 7s linear infinite reverse;
+   
     @apply transition-all;
 
 }
-
+.spin
+{
+    animation : spin 7s linear infinite reverse;
+}
 @media screen and (max-width: 768px) {
     .logo{
         width: 20vw;

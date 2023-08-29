@@ -48,7 +48,7 @@ const WelcomeChat = () => {
                   size={80}
                 />
               ) : (
-                <MemorizedLogoSvg extra="w-20 h-20" /> // Wrap in a tag or fragment
+                <MemorizedLogoSvg extra="w-20 h-20" animate={true}/> // Wrap in a tag or fragment
               )
             }
           </div>
