@@ -83,9 +83,15 @@ const FileInput = ({ icon, user, chatId, chatPrefix }: FileInputProps) => {
 
         event?.preventDefault();
         if (!loading) {
+            let isError = false;
             setErrors([]);
             const imagesData: File[] = [];
             images.forEach((image: any) => {
+                if(image.file.size > (2 * 1024 * 1024) ) 
+                {
+                    isError = true;
+                    setErrors((prevErrors) => [...prevErrors, `${image.file.name} should be less than 2MB`]);
+                }
                 imagesData.push(image.file);
                 formData.append(`files[]`, image.file);
             });
@@ -94,7 +100,8 @@ const FileInput = ({ icon, user, chatId, chatPrefix }: FileInputProps) => {
             formData.append('sender_id', user!.id);
             formData.append('message_type', 'file');
             formData.append('message', `sent ${imagesData.length} photos`);
-            setLoading(true);
+            if(!isError) {
+                setLoading(true);
             const res  = await sendEventFileMessage(formData);
            
             if (res instanceof AxiosError) {
@@ -104,12 +111,12 @@ const FileInput = ({ icon, user, chatId, chatPrefix }: FileInputProps) => {
             else {
               res && res.status === 200 && closeImageModal();
             }
+            }
             setLoading(false);
         }
     }
         , [loading, images, formData, chatId, chatPrefix, user, closeImageModal])
 
-    console.log(errors);
     return (
         <div  >
             <form id="fileSendForm" onSubmit={handleSubmit(onSubmit)} className="hidden">

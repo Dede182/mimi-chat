@@ -11,17 +11,24 @@ interface InputFieldProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     register_name: any,
     label: string,
-    placeholder?: string
+    placeholder?: string,
+    disabled ? : boolean,
+    initialValue ? : string | number
 }
 
-const InputField = ({type,errors,register,register_name,label,placeholder} : InputFieldProps) => {
+const InputField = ({type,errors,register,register_name,label,placeholder ,disabled,initialValue} : InputFieldProps) => {
+
+
   return (
     <div className="form-control w-full ">
-    <label className="label">
+    {
+      label !== "" && <label className="label">
       <span className="label-text capitalize">{t(label)}</span>
     </label>
+    }
     <input type={type}
-    {...register(register_name)}
+    {...register(register_name)} disabled={disabled}
+    value={initialValue}
     placeholder={t(placeholder !)} className="input input-md input-bordered w-full" />
     <InputError errors={errors} />
 

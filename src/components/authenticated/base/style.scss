@@ -173,3 +173,10 @@
 
     @apply input input-sm md:input-md modal-input ;
 }
+.input{
+    background: var(--color-secondary) !important;
+    &:disabled{
+        background: var(--color-tertiary) !important;
+        border-color: var(--color-border) !important;
+    }
+}

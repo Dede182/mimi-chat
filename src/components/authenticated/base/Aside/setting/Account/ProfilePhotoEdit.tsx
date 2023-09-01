@@ -136,11 +136,12 @@ const ProfilePhotoEdit = ({ user }: ProfilePhotoEditProps) => {
                     <Cropper
                         ref={cropperRef}
                         style={{ height: 400, width: "100%" }}
-                        zoomTo={0.5}
+                        zoomTo={0.1}
                         initialAspectRatio={1}
                         preview=".img-preview"
                         src={image}
-                        viewMode={1}
+                        viewMode={2}
+                        
                         minCropBoxHeight={10}
                         minCropBoxWidth={10}
                         background={false}

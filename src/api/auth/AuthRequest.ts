@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { ApiRequest } from '../ApiRequest';
+import { EditForm } from '@/components/authenticated/base/Aside/setting/Account/ProfileInfoEdit';
 
 const postObj = (url: string, body: object) => {
     return {
@@ -64,4 +65,12 @@ export const updateProfilePicture = async (body : FormData) => {
             url: '/user/profile/photo/update',
             params : body
         }) 
+}
+
+export const updateProfile = async (body : EditForm) => {
+    return await ApiRequest({
+        method: 'put',
+        url: '/user/profile/update',
+        params : body
+    }) 
 }

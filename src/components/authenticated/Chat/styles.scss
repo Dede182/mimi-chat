@@ -3,6 +3,7 @@
     width: 100%;
 }
 
+
 .chat-bg {
     background-image: url("../../../assets/svgs/chatBg.svg");
     width: 100%;
@@ -39,7 +40,11 @@
             @apply px-7 py-2 rounded-2xl text-base;
         }
     }
+
+    
 }
+
+
 
 .beatLoader {
     color: var(--color-font) !important;

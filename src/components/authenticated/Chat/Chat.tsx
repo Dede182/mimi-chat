@@ -148,20 +148,40 @@ const Chat = () => {
   const groupedMessages = groupByDate(messages);
 
   const messageElements = Object.keys(groupedMessages)
-    .sort((a, b) => b.localeCompare(a))
-    .map((date, index) => {
-      const messagesForDate = groupedMessages[date];
-      const messageText = messagesForDate.map((message: any) => (
-        <MemorizedChatMessageLine key={`chat_${chatId}` + message.id} message={message} />
-      ))
-      return (
-        <div key={index} className='flex flex-col-reverse'>
-          {messageText}
-          <div key={date} className='date'>
-            <span>{date}</span>
-          </div>
-        </div>);
-    });
+  .sort((a, b) => {
+    // Extract year and month from the dates
+    const [aYear, aMonth] = a.split('-').map(Number);
+    const [bYear, bMonth] = b.split('-').map(Number);
+       
+    // If years are the same, compare months
+    if (aMonth !== bMonth) {
+      console.log('here');
+      return bMonth - aMonth;
+    }
+
+     if (aYear !== bYear) {
+      return bYear - aYear;
+    }
+
+    // If years and months are the same, use the default sorting
+    return b.localeCompare(a);
+  })
+  .map((date, index) => {
+    const messagesForDate = groupedMessages[date];
+    const messageText = messagesForDate.map((message: any) => (
+      <MemorizedChatMessageLine key={`chat_${chatId}` + message.id} message={message} />
+    ));
+
+    return (
+      <div key={index} className='flex flex-col-reverse'>
+        {messageText}
+        <div key={date} className='date'>
+          <span>{date}</span>
+        </div>
+      </div>
+    );
+  });
+
 
   return (
     <div className="chat-bg flex flex-col justify-between transition-all ">

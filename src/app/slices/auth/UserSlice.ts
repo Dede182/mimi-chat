@@ -24,7 +24,6 @@ export const fetchProfile = createAsyncThunk('/fetch/profile', async ({url,token
 
     try {
         const response = await getProfile(url, token) as modifiedAxiosResponse ;
-        
         return gos(response);
     } catch (error) {
        eos(error)
@@ -37,6 +36,9 @@ export const userSlice = createSlice({
     reducers: {
         changeUserProfilePicture : (state,action) =>{
             state.user!.profile_photo = action.payload
+        },
+        changeUserInfo : (state,action) =>{
+            state.user = action.payload
         }
     },
     extraReducers: (builder) => {
@@ -56,7 +58,7 @@ export const userSlice = createSlice({
 
 export const selectUser = (state : RootState) => state.user!.user;
 
-export const {changeUserProfilePicture} = userSlice.actions;
+export const {changeUserProfilePicture,changeUserInfo} = userSlice.actions;
 
 export default userSlice.reducer;
 // export const {} = userSlice.actions;

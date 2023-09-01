@@ -23,7 +23,7 @@ export const findFavorites = async (url: string,search : any) => {
   return await ApiRequest({
       method: 'get',
       url: url,
-      params : {
+    params : {
         search : search
       }
     })

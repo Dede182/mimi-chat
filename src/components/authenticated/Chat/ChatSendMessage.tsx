@@ -1,7 +1,6 @@
-import React, { createRef, useCallback, useMemo } from 'react'
+import React, { createRef, useCallback, useMemo, useState } from 'react'
 import FileInput from './FileInput/FileInput'
 import { LuSticker, HiPlus, BsEmojiLaughing, BsFillSendFill,  } from '@/utils/helpers/SidebarHelper'
-import { useForm } from 'react-hook-form';
 import { MemoizedChatBtnCircle } from '@/components/authenticated/Chat/ChatIndex';
 import { debounce } from "lodash"
 import { sendEventMessage } from '@/api/generals/ChatList';
@@ -10,12 +9,7 @@ import { PresenceEchoManager } from './EchoManager/PresenceEchoManager';
 import { PresenceChannel } from 'laravel-echo';
 import { alertToast } from '@/components/tools/Toast/AlertToast';
 import { AxiosError } from 'axios';
-import InputError from '@/components/ui/Fields/InputError';
-
-type FormValues = {
-    message: string,
-  }
-
+import EmojiBox from './EmojiInput/EmojiBox';
 interface Props {
     chatId: string | undefined;
     user:  AuthUser | null;
@@ -23,10 +17,10 @@ interface Props {
     chatPrefix: React.MutableRefObject<number>
     subscribe: () => PresenceChannel;
 }
-const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Props) => {
+const ChatSendMessage = ({chatId,user,chatPrefix,subscribe} : Props) => {
 
     const textArea = createRef<HTMLTextAreaElement>();
-
+    const [textMessage, setTextMessage] = useState<string>('');
     const formRef = createRef<HTMLFormElement>();
     const [loading, setLoading] = React.useState<boolean>(false);
     const [fall, setFall] = React.useState<any[]>([]);
@@ -37,33 +31,28 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
         }
     };
 
-    const {
-        register,
-        formState: { errors },
-        handleSubmit,
-        setValue,
-        getValues,
-        resetField,
-      } = useForm<FormValues>();
-    
+    const messageOnChange = useCallback((event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setTextMessage(event.target.value);
+      }, []);
 
     const onSubmit = useCallback(
-       async (data: any) => {
+       async () => {
               if(!loading)
               {
                 setLoading(true);
                 setFall([]);
-                const res = await sendEventMessage(data.message, user!.id, chatId!, chatPrefix.current,'text')
+                const messages = textMessage;
+                const res = await sendEventMessage(messages !, user!.id, chatId!, chatPrefix.current,'text')
                 if(res instanceof AxiosError){
                   res.response && setFall([res.response.data]);
                 }
-                else{
-                  res && res.status === 200 && resetField('message');
+                else if(res && res.status === 200  ){
+                  setTextMessage(()=> '');
                 }
                 setLoading(false);
               }
               },
-        [user, chatId, chatPrefix]
+        [loading, textMessage, user, chatId, chatPrefix]
       );
 
     if(fall.length > 0){
@@ -87,8 +76,7 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
       }, [])
 
     const isTyping = useCallback(() => {
-        const text = getValues('message');
-        if (text.length > 0) {
+        if (textMessage && textMessage.length > 0) {
           subscribe()
             .whisper('startTyping', {
               name: user!.name,
@@ -100,41 +88,33 @@ const ChatSendMessage = ({chatId,user,channelManager,chatPrefix,subscribe} : Pro
               name: user!.name,
             })
         }
-      }, [channelManager, getValues, user])
-
-    const emojiModal = () => {
-        const text = getValues('message');
-        const cursorPosition = textArea.current?.selectionStart;
-        const newText = text.slice(0, cursorPosition) + "😀" + text.slice(cursorPosition);
-        setValue('message', newText, { shouldDirty: true });
-    };
+      }, [subscribe, textMessage, user])
 
     return (
         <div className="chat-input w-full h-[10%] fixed bottom-0 md:relative ">
 
             <div className="flex items-center justify-evenly  h-full gap-2">
-                <form ref={formRef} onSubmit={handleSubmit(onSubmit)} id="sendMessageForm"  className='hidden'>
+
+                <form ref={formRef} onSubmit={onSubmit} id="sendMessageForm"  className='hidden'>
 
                 </form>
                 <div className="w-2/6 flex justify-evenly">
-                    <MemoizedChatBtnCircle icon={icons.sticker} />
-                    <MemoizedChatBtnCircle icon={icons.emoji} clickFn={emojiModal} />
-
+                    {/* <MemoizedChatBtnCircle icon={icons.sticker} /> */}
+                    <EmojiBox icon={icons.emoji} textMessage={textMessage}  setTextMessage={setTextMessage} textArea={textArea}/>
                     <FileInput icon={icons.plus} user={user} chatId={chatId !} chatPrefix={chatPrefix} />
                 </div>
 
                 <textarea
                     form='sendMessageForm'
-                    {...register('message' , { required: true })}
+                    ref={textArea}
                     placeholder='Write your Message'
                     onKeyUp={isTyping}
-                    // ref={textArea}
                     onKeyDown={handleTextareaKeyDown}
+                    onChange={messageOnChange}
+                    value={textMessage}
                     className="w-3/6 resize-none scroll pt-5 break-words rounded-full focus:outline-none focus:ring-transparent bg-transparent border-none px-4"
                     required
                     ></textarea>
-                <InputError errors={errors.message !} />
-
 
                 <div className="w-1/6">
 

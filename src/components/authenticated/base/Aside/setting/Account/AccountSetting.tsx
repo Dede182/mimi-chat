@@ -4,6 +4,7 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { useAppSelector } from "@/app/hooks";
 import { selectUser } from "@/app/slices/slices";
 import ProfilePhotoEdit from "./ProfilePhotoEdit";
+import ProfileInfoEdit from "./ProfileInfoEdit";
 
 interface AccountSettingProps {
   witch: (setting: SettingTypes) => void;
@@ -11,8 +12,9 @@ interface AccountSettingProps {
 const AccountSetting = ({ witch }: AccountSettingProps) => {
 
   const user = useAppSelector(selectUser);
+
   return (
-    <div className="flex flex-col md:w-[27vw]">
+    <div className="flex flex-col md:w-[27vw] ">
       <div className="flex justify-between items-center px-10 py-5">
         <div className="flex flex-col justify-center">
           <h3 className="text-xl font-bold capitalize">{t("Account")}</h3>
@@ -26,8 +28,10 @@ const AccountSetting = ({ witch }: AccountSettingProps) => {
 
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-9">
             <ProfilePhotoEdit user={user !} />
+
+            <ProfileInfoEdit user={user !} />
         </div>
     </div>
   )
