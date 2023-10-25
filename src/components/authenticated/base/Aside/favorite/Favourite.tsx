@@ -17,7 +17,7 @@ const Favourite = () => {
 
   const fetchFavorites = useCallback(async (page: number) => {
     setLoading(true);
-    const res: any = await getFavorites(`user/favorites?page=${page}`)!
+    const res: any = await getFavorites(`user/favorites?page=${page}`)!;
     const data = res.data.data;
     setFavorites((prev) => [...prev, ...data]);
     setLoading(false);
@@ -31,12 +31,14 @@ const Favourite = () => {
   useEffect(() => {
     const handleFavoritesUpdated = (e: any) => {
       setFavorites((prev) =>
-        prev.filter((favorite) => favorite.favorite.id !== e.detail.favorite_id)
+        prev.filter((favorite) => favorite.fav_id !== e.detail.favorite_id)
       );
     };
 
     const handleFavoritesAdded = (e: any) => {
-      setFavorites((prev) => [...prev, e.detail]);
+      
+      setFavorites((prev) => [...prev, e.detail.favorite]);
+      console.log(favorites);
     };
 
     window.addEventListener('favorites-updated', handleFavoritesUpdated);
@@ -46,10 +48,14 @@ const Favourite = () => {
       window.removeEventListener('favorites-updated', handleFavoritesUpdated);
       window.removeEventListener('favorites-added', handleFavoritesAdded);
     };
-  }, []);
+  }, [favorites]);
+
+  console.log(favorites);
+
 
   return (
-    <div className="animate__animated animate__fadeIn  relative  z-[200]">
+    <div  
+     className="animate__animated animate__fadeIn  relative  z-[200]">
       <div className="py-5">
 
         <div className="flex flex-col ">
@@ -69,7 +75,7 @@ const Favourite = () => {
               <BeatLoader color='#1c9dea' loading={true} size={10} />
             </div> :
               favorites.length > 0 ? favorites.map((favorite) => (
-                <MemorizedChatLine key={favorite.favorite.id} favoriteUser={favorite} />
+                <MemorizedChatLine key={favorite.id} favoriteUser={favorite} />
               )) : <div className="w-full text-center text-gray-500">
                 <p>{t('No favorites yet')}</p>
               </div>

@@ -17,5 +17,19 @@
   "Passwords must match": "စကားဝှက်မှာကိုက်ညီရမည်",
   "welcome": "ကြိုဆိုပါတယ်။",
   "Enter your name": "သင့်အမည်ကို ထည့်သွင်းပါ။",
-  "Enter your email": ""
+  "Enter your email": "သင့်email ကိုထည့်သွင်းပါ",
+  "Theme": "အရောင်",
+  "Language": "ဘာသာစကား",
+  "Account": "မိမိအကာင့်",
+  "Chat": "Chat",
+  "update your account detail": "မိမိအကာင့်အချက်အလက်ပြင်ဆင်ခြင်း",
+  "customize your chat": "chat ပြင်ဆင်ခြင်း",
+  "Name": "အမည်",
+  "Phone Number": "ဖုန်းနံပါတ်",
+  "Email": "အီးမေး",
+  "Update": "ပြင်ဆင်မည်",
+  "Edit mode": "ပြင်ဆင််မှု",
+  "No Messages": "မက်ဆေ့ချ်များ မရှိပါ။",
+  "Start a new conversation": "conservation အသစ်တစ်ခု စတင်ပါ။",
+  "chat from your friends": ""
 }

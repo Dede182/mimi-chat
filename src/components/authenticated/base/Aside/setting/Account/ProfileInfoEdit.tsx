@@ -21,7 +21,6 @@ const ProfileInfoEdit = ({ user }: { user: AuthUser }) => {
 
     const [edit, setEdit] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
-    const [fails, setFails] = useState<any[]>([]);
     const dispatch = useAppDispatch();
 
     const {
@@ -53,7 +52,7 @@ const ProfileInfoEdit = ({ user }: { user: AuthUser }) => {
     const onSubmit = async (data: EditForm) => {
         setLoading(true);
         await updateProfile(data)
-            .then((res ) => {
+            .then((res : Awaited<unknown>) => {
                 if (res && res.status === 200) {
                     console.log(res);
                     setEdit(false);
@@ -119,7 +118,7 @@ const ProfileInfoEdit = ({ user }: { user: AuthUser }) => {
                             {loading ? <ClipLoader size={15} color="#fff" /> : t("Update")}
                         </button>
                         :
-                        <button type="button" onClick={switchEdit} className="btn btn-soft">{t("edit mode")}</button>}
+                        <button type="button" onClick={switchEdit} className="btn btn-soft">{t("Edit mode")}</button>}
                 </div>
             </div>
         </form>

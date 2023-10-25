@@ -41,7 +41,7 @@ export const DefaultSetting = ({ changeCurrentSetting }: DefaultSettingProps) =>
             </div>
 
             <SettingItem title="Account" description='update your account detail' Icon={MemorizedIosArrowIcon} setting={SettingTypes.ACCOUNT} witch={changeCurrentSetting} />
-            <SettingItem title="Chat" description='control your chat' Icon={MemorizedIosArrowIcon} setting={SettingTypes.CHAT} witch={changeCurrentSetting} />
+            <SettingItem title="Chat" description='customize your chat' Icon={MemorizedIosArrowIcon} setting={SettingTypes.CHAT} witch={changeCurrentSetting} />
         </div>
     )
 }

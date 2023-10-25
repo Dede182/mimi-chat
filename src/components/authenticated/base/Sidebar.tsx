@@ -7,7 +7,6 @@ import Cookies from "js-cookie";
 import { selectUser } from "@/app/slices/auth/UserSlice";
 import { MemorizedSidebarItem } from "./SidebarItem";
 import { memo, useCallback, useMemo } from "react";
-import { changeTheme, selectTheme } from "@/app/slices/settingSlices";
 import { ImCross } from 'react-icons/im'
 import LogoSvg from "@/components/svgs/Logo/logo";
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +20,6 @@ const Sidebar = () => {
     const dispatch = useAppDispatch();
     const AiImCrossIcon = useMemo(() => ImCross, []);
     const navigate = useNavigate();
-    const theme = useAppSelector(selectTheme) == "theme-dark" ? "theme-light" : "theme-dark";
 
     const user = useAppSelector(selectUser);
 
@@ -50,12 +48,6 @@ const Sidebar = () => {
             logo : <LogoSvg /> 
         }
     }, [])
-
-    const themeSwitch = useCallback(()=>{
-            dispatch(changeTheme(theme))
-            localStorage.setItem('theme', theme);
-    
-    },[dispatch,theme])
     return (
         <div className={`${sidebarWidth} sidebar gap-12 absolute z-[9999]  md:relative`}>
 
@@ -65,11 +57,11 @@ const Sidebar = () => {
 
             <ul className={`${sidebarUl} flex flex-col transition-transform `}>
                 <li>
-                    <div className="avatar">
-                        <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                    <div className="avatar items-center justify-center">
+                        <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                             <img src={user?.profile_photo} />
                         </div>
-                    </div>
+                    </div> 
                 </li>
 
                 <li >
@@ -77,16 +69,16 @@ const Sidebar = () => {
                 </li>
 
                 <li >
-                    <MemorizedSidebarItem icon={icons.contacts} akey="move" toggle={toggle} aside={CurrentAside.CONTACTS} />
+                    <MemorizedSidebarItem icon={icons.contacts} akey="move" toggle={toggle} aside={CurrentAside.GROUP} />
                 </li>
 
                 <li >
                     <MemorizedSidebarItem icon={icons.setting} akey="spin" toggle={toggle} aside={CurrentAside.SETTINGS} />
                 </li>
 
-                <li >
+                {/* <li >
                     <MemorizedSidebarItem icon={icons.light} clickFn={themeSwitch} />
-                </li>
+                </li> */}
 
                 <li >
                     <MemorizedSidebarItem icon={icons.powerOff} akey="move" clickFn={logout} />

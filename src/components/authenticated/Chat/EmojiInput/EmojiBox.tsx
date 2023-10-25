@@ -1,5 +1,5 @@
-import  { Theme } from 'emoji-picker-react';
-import { Suspense, lazy, useState } from 'react';
+import  { EmojiClickData, Theme } from 'emoji-picker-react';
+import { Suspense, lazy, memo, useCallback, useState } from 'react';
 import { MemoizedChatBtnCircle } from '../ChatBtnCircle';
 import { useAppSelector } from '@/app/hooks';
 import { selectTheme } from '@/app/slices/settingSlices';
@@ -13,16 +13,23 @@ interface EmojiBoxProps {
     textArea: React.RefObject<HTMLTextAreaElement>,
     setTextMessage : React.Dispatch<React.SetStateAction<string>>,
 }
+
+const MemoEmojiPicker = memo(LazyEmojiPicker);
+
+
 const EmojiBox = ({icon,setTextMessage,textArea,textMessage} : EmojiBoxProps)  => {
     const [open,setOpen] = useState<boolean>(false);
     const theme = useAppSelector(selectTheme)
 
     const th = (theme == 'theme-dark') ? Theme.DARK : Theme.LIGHT;
-    const toggleEmoji = () => {
-        setOpen(!open);
-    }
+    const toggleEmoji = useCallback(
+        () => {
+                setOpen(!open);
+        },
+        [open]
+    )
 
-    const emojiClicked = (emojiObject: any) => {
+    const emojiClicked = (emojiObject: EmojiClickData) => {
         const emoji = emojiObject.emoji;
         const text = textMessage;
         const cursorPosition = textArea.current?.selectionStart;
@@ -39,7 +46,7 @@ const EmojiBox = ({icon,setTextMessage,textArea,textMessage} : EmojiBoxProps)  =
             open && 
             <div className='absolute bottom-20 '>
                 <Suspense fallback={<div>Loading...</div>}> 
-                <LazyEmojiPicker
+                <MemoEmojiPicker
                 width={300} height={400}
                 onEmojiClick={emojiClicked}
                 previewConfig={{showPreview: false}}

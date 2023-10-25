@@ -24,7 +24,7 @@ export const authService = createAsyncThunk('auth/login', async (body: authbody)
         
         return gos(response);
     } catch (error) {
-     
+       console.log(error);
        eos(error)
     }
 

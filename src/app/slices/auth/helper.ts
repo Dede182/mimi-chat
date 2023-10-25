@@ -6,8 +6,8 @@ export const gos = (result : any)=>{
     if (result && result.status === 200 && result.data) {
            
         return result.data;
-    }
-    if(result && result.status === 403 && result.data)
+    } 
+    if(result && result.status == 403 || result.status == 401 || result.status == 422 && result.data)
     {
     throw new Error(result.data.message);
     }

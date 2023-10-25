@@ -23,7 +23,7 @@ export const cutTime = (date: string) => {
 
 export const cutString = (text: string,point : number = 20) =>
 {
-    return text !== null && text.length > point ? `${text.substring(0, point)}...` : text;
+    return text !== null && text !== undefined && text.length > point ? `${text.substring(0, point)}...` : text;
 }
 
 export const toHour = (timestamp :string) =>{

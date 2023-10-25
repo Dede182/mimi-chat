@@ -1,6 +1,6 @@
 export enum CurrentAside  {
     DEFAULT = 'default',
-    CONTACTS = 'contacts',
+    GROUP = 'group',
     FAVORITES = 'favorites',
     SETTINGS = 'settings',
 }
@@ -8,7 +8,7 @@ export enum CurrentAside  {
 interface SingleChatInfo {
     user_id: number;
     single_chat_id: number;
-    id: number;
+    id?: number;
   }
   
  export interface SearchedUsers {
@@ -20,17 +20,26 @@ interface SingleChatInfo {
     single_chat_infos: SingleChatInfo[];
   }
 
-export interface FavoriteUser {
-    id: number;
-    name: string;
-    email: string;
-    profile_photo: string;
-
-}
   
 export interface FavoriteUserResponse {
-    favorite_id : number;
-    favorite : FavoriteUser;
+    id : number;
+    user_id : number;
+    fav_id : number;
+    chat_id : number;
+    email : string;
+    name : string;
+    profile_photo:string;
 }
+
+export interface UnFavList
+{
+    id : number;
+    email : string;
+    name : string;
+    profile_photo:string;
+    single_chat_infos: SingleChatInfo[];
+}
+
+export type FavoriteUser = Pick<FavoriteUserResponse , "id" | "name" | "email" | "profile_photo" | "chat_id">;
 
 

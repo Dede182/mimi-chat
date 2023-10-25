@@ -3,10 +3,13 @@ import { ApiRequest } from '@/api/ApiRequest';
 
 
 export const getFavorites = async (url: string) => {
-        return await ApiRequest({
+        const data =  await ApiRequest({
             method: 'get',
             url: url,
-          })
+          });
+
+        console.log(data!.data)
+        return data
 
 }
 

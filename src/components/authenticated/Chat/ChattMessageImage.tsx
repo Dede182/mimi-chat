@@ -40,7 +40,7 @@ const ChatMessageSingleMessage = ({ image }: { image: FilePath }) => {
         fetchImage(image.hd);
       }, [image]);
     return (
-        <button onClick={openImageModal} className={`md:w-32 md:h-32 w-28 h-28 rounded-lg`}>
+        <button onClick={openImageModal} className={`md:w-28 md:h-28 w-20 h-20 rounded-lg`}>
           <img src={currentImage} alt="" className={`w-full h-full object-cover rounded-lg ${blurEffect}`} />
         </button>
     )

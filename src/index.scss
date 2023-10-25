@@ -36,3 +36,21 @@
      color: var(--color-font-fade);
      font-family : $font-primary;
 }
+
+.loading-title{
+     color: var(--color-font-fade);
+     font-family : $font-primary;
+     font-size: 2rem;
+}
+
+
+select{
+     font-family : $font-primary;
+     background-color: var(--color-soft);
+     border-color: var(--color-secondary);   
+     border-radius: 8px;
+     min-width: 25vw;
+}
+input {
+     border-radius: 5px!important;
+}

@@ -17,5 +17,19 @@
   "Passwords must match": "Passwords must match",
   "welcome": "welcome",
   "Enter your name": "Enter your name",
-  "Enter your email": "Enter your email"
+  "Enter your email": "Enter your email",
+  "Theme": "Theme",
+  "Language": "Language",
+  "Account": "Account",
+  "Chat": "Chat",
+  "update your account detail": "update your account detail",
+  "customize your chat": "customize your chat",
+  "Name": "Name",
+  "Phone Number": "Phone Number",
+  "Email": "Email",
+  "Update": "Update",
+  "Edit mode": "Edit mode",
+  "No Messages": "No Messages",
+  "Start a new conversation": "Start a new conversation",
+  "chat from your friends": "chat from your friends"
 }

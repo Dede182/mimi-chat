@@ -3,7 +3,7 @@ import { t } from 'i18next'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiPlus } from 'react-icons/hi'
-import { FavoriteUser } from '../types'
+import { FavoriteUserResponse, UnFavList } from '../types'
 import { BeatLoader } from 'react-spinners'
 import { AiFillHeart,AiOutlineReload } from 'react-icons/ai'
 
@@ -12,7 +12,7 @@ const AddFavorite = () => {
 
     const [loading, setLoading] = useState<boolean>(false);
     const [loadMoreLoading,setLoadMoreLoading] = useState<boolean>(false);
-    const [favorites, setFavorites] = useState<FavoriteUser[]>([]);
+    const [favorites, setFavorites] = useState<FavoriteUserResponse[]>([]);
     const [page, setPage] = useState<number>(1);
     const [lastPage, setLastPage] = useState<number>(1);
     const [search, setSearch] = useState<string>('');
@@ -50,13 +50,13 @@ const AddFavorite = () => {
 
     useEffect(() => {
         const handleFavoritesUpdated = (e: any) => {
-            setFavorites((prev) => [...prev, e.detail.favorite as FavoriteUser]);
+            setFavorites((prev) => [...prev, e.detail.favorite as FavoriteUserResponse]);
         };
 
         const handleFavoritesAdded = (e: any) => {
-
+            console.log(e);
             setFavorites((prev) =>
-                prev.filter((favorite) => favorite.id !== e.detail.favorite_id)
+                prev.filter((favorite) => favorite.id !== e.detail.fav_id)
             );
         };
 
@@ -66,8 +66,9 @@ const AddFavorite = () => {
         return () => {
             window.removeEventListener('favorites-updated', handleFavoritesUpdated);
             window.removeEventListener('favorites-added', handleFavoritesAdded);
+
         };
-    }, []);
+    }, [favorites]);
 
     const {
         register,
@@ -96,7 +97,7 @@ const AddFavorite = () => {
             <input type="checkbox" id="my_modal_8" className="modal-toggle" />
             <div className="modal ">
                 <div className="modal-box scroll !z-[100] relative  w-5/6 md:w-4/6  max-h-[60%]">
-                    <h3 className="text-lg font-bold mb-3 pb-4 bb capitalize">{t('add chat to favorite')}</h3>
+                    <h3 className="text-lg font-bold mb-3 pb-4 bb capitalize">{t('add your favorite')}</h3>
 
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className="form-control w-full flex flex-row gap-3">
@@ -148,13 +149,19 @@ const AddFavorite = () => {
     )
 }
 
-const InlineUser = ({ user }: { user: FavoriteUser }) => {
+const InlineUser = ({ user }: { user: FavoriteUserResponse }) => {
     const model = document.getElementById('my_modal_8') as HTMLInputElement;
     const HeartIcon = useMemo(() => {
         return <AiFillHeart />
     }, [])
     const [isFavorite, setIsFavorite] = useState<boolean>(false);
+    if((user as unknown as UnFavList)?.single_chat_infos?.length > 0){
+        user.chat_id = (user as unknown as UnFavList)?.single_chat_infos[0]?.single_chat_id
 
+    }
+    user.fav_id = user.id;
+    console.log(user);
+    
     const addFavorite = async () => {
         const res: any = await postFavorites('/user/favorites/add', { favorite_id: user.id }, 'post');
         if (res?.status === 200) {

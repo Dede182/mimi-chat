@@ -3,7 +3,7 @@ import { selectSidebar } from "@/app/slices/sidebarSlice";
 import { CurrentAside } from "./Aside/types";
 import { lazy, Suspense, useCallback, useMemo, } from 'react';
 import {AiOutlineAppstore} from 'react-icons/ai'
-const Contacts = lazy(() => import('./Aside/Contacts'));
+const Contacts = lazy(() => import('./Aside/groupChat/GroupChat'));
 const Favourite = lazy(() => import('./Aside/favorite/Favourite'));
 const Setting = lazy(() => import('./Aside/setting/Setting'));
 const MainAside = lazy(() => import('./Aside/MainAside/MainAside'));
@@ -18,7 +18,7 @@ const renderAside = (aside: CurrentAside) => {
        return <Favourite />
     case CurrentAside.SETTINGS:
       return <Setting/>
-    case CurrentAside.CONTACTS:
+    case CurrentAside.GROUP:
       return <Contacts />
     default:
       return <MainAside />;

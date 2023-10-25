@@ -27,6 +27,7 @@ const MainAside = () => {
 
     const res = await getChatData(`user/chats/list?page=${page}`, token!)!
     if (res) {
+      console.log(res)
       const result = res && res.data.data.data
       ske.chatCount = result.length > 6 ? 6 : result.length;
       localStorage.setItem('ske', JSON.stringify(ske));
@@ -156,8 +157,8 @@ const MainAside = () => {
               <>
                 {chatList.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full">
-                    <h3 className="text-2xl font-bold">No Messages</h3>
-                    <p className="text-gray-500">Start a new conversation</p>
+                    <h3 className="text-2xl font-bold">{t('No Messages')}</h3>
+                    <p className="text-gray-500">{t('Start a new conversation')}</p>
                   </div>
                 ) :
                   <InfiniteScroll

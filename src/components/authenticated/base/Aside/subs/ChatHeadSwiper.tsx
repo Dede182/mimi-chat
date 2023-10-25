@@ -11,13 +11,13 @@ const ChatHeadSwiper = ({casts } : CastsProps) => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
   const [my_swiper, set_my_swiper] = useState<any>();
-
+  const perView = window.innerWidth < 768 ? 2 : 3;
 
   return (
     <div className="recent-swiper w-full relative mt-6 px-10">
     <Swiper
       className="flex-1 !mx-2 mySwiper hidden"
-      slidesPerView={2}
+      slidesPerView={perView}
      
       spaceBetween={'8rem'}
       pagination={{

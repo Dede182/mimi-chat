@@ -73,7 +73,7 @@ const ChatLine = ({ chatline }: { chatline: ChatListDataType }) => {
       onClick={() => navigateToChat()}
       className={`chat-line flex gap-3  py-3 px-10 cursor-pointer ${isActive}`}>
       {/* avatar */}
-      <div className={`avatar w-[20%] ${isOnline}`}>
+      <div className={`avatar w-[4em] ${isOnline}`}>
         <div className="w-14 mask mask-squircle">
           <img src={chatline.profile_photo!} />
         </div>
