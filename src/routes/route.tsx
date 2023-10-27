@@ -30,6 +30,9 @@ export const routesCollection : Record<string,Route> = {
       path: '/chat/:id',
       // element: middleware(Guard, <Chat/>)
     },
+    groupChat:{
+      path: '/group-chat/:id',
+    },
     aside : {
       path : '/aside',
       // element : middleware(Guard,<As)

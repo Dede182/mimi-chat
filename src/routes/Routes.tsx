@@ -12,6 +12,7 @@ const Chat = lazy(()=>import('../components/authenticated/Chat/Chat'))
 const Login = lazy(()=>import('../components/guest/Login'))
 const Register = lazy(()=>import('../components/guest/Register'))
 const Aside = lazy(()=>import('@/components/authenticated/base/Aside'))
+const GroupChat = lazy(()=>import('@/components/authenticated/GroupChat/GroupChat'))
 const RoutesComponent = () => {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -43,6 +44,8 @@ const RoutesComponent = () => {
       <Route element={<Layout />}>
 
         { RouteFc(routesCollection.chat.path, <Guard><Chat/></Guard>)}
+
+        { RouteFc(routesCollection.groupChat.path, <Guard><GroupChat/></Guard>)}
 
         { RouteFc(routesCollection.mainChat.path, <Guard><WelcomeChat/></Guard>)}
 
